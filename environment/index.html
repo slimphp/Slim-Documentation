@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Environment - Slim Framework Documentation</title>
+  <title>Environment - Slim Framework</title>
   
 
   
@@ -34,7 +34,7 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
       <div class="wy-side-nav-search">
-        <a href=".." class="icon icon-home"> Slim Framework Documentation</a>
+        <a href=".." class="icon icon-home"> Slim Framework</a>
         
       </div>
 
@@ -42,16 +42,49 @@
       <ul class="current">
     
         
-            <li class="toctree-l1 ">
-                <a class="" href="../introduction">Introduction</a>
-            </li>
+        <span>Get Started</span>
+            
+                <li class="toctree-l1 ">
+                    <a class="" href="../start/installation">Installation</a>
+                    
+                </li>
+            
+                <li class="toctree-l1 ">
+                    <a class="" href="../architecture">Architecture</a>
+                    
+                </li>
+            
+                <li class="toctree-l1 ">
+                    <a class="" href="../lifecycle">Lifecycle</a>
+                    
+                </li>
+            
         
 
     
         
-            <li class="toctree-l1 current">
-                <a class="current" href=".">Environment</a>
-            </li>
+        <span>Objects</span>
+            
+                <li class="toctree-l1 current">
+                    <a class="current" href=".">Environment</a>
+                    
+                        <ul>
+                        
+                            <li class="toctree-l2"><a href="#the-environment-object">The Environment Object</a></li>
+                            
+                                <li><a class="toctree-l3" href="#environment-service">Environment Service</a></li>
+                            
+                                <li><a class="toctree-l3" href="#environment-properties">Environment Properties</a></li>
+                            
+                                <li><a class="toctree-l3" href="#environment-interface">Environment Interface</a></li>
+                            
+                                <li><a class="toctree-l3" href="#mock-environments">Mock Environments</a></li>
+                            
+                        
+                        </ul>
+                    
+                </li>
+            
         
 
     
@@ -77,9 +110,13 @@
 
     
         
-            <li class="toctree-l1 ">
-                <a class="" href="../view">View</a>
-            </li>
+        <span>Features</span>
+            
+                <li class="toctree-l1 ">
+                    <a class="" href="../view">View</a>
+                    
+                </li>
+            
         
 
     
@@ -125,6 +162,33 @@
         
 
     
+        
+        <span>Interfaces</span>
+            
+                <li class="toctree-l1 ">
+                    <a class="" href="../interface_collection">Collection</a>
+                    
+                </li>
+            
+        
+
+    
+        
+        <span>Contributors</span>
+            
+                <li class="toctree-l1 ">
+                    <a class="" href="../contributors/guidelines">Guidelines</a>
+                    
+                </li>
+            
+                <li class="toctree-l1 ">
+                    <a class="" href="../contributors/strategy">Branching Strategy</a>
+                    
+                </li>
+            
+        
+
+    
 </ul>
 
       </div>
@@ -154,8 +218,80 @@
 </div>
           <div role="main">
             <div class="section">
-              <h1 id="environment">Environment</h1>
-<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis assumenda, consequatur tempore. Eum animi cum consectetur dicta deleniti. Ipsum iste, cupiditate. Alias odio tempore ea eum, deserunt velit non recusandae!</p>
+              <h1 id="the-environment-object">The Environment Object</h1>
+<p>The Environment object encapsulates the current global environment, including the HTTP request method, URI, and headers. It also includes several properties from the <code>$_SERVER</code> superglobal array. The Environment object effectively decouples a Slim application from the global environment. Decoupling the Slim application from the PHP global environment lets us create HTTP requests that may (or may not) resemble the global environment. This is particuarly useful for unit testing.</p>
+<h2 id="environment-service">Environment Service</h2>
+<p>The Environment object is registered as a Pimple service on the application instance. You can fetch the Environment object like this:</p>
+<pre><code>&lt;?php
+$environment = $app['environment'];
+</code></pre>
+<p>You rarely access the Environment object directly. Instead, the application's Environment object exists only to decouple the global environment and inform the Request object. It otherwise lives quietly in the background.</p>
+<h2 id="environment-properties">Environment Properties</h2>
+<p>Each Slim application has an Environment object with various properties that determine application behavior. Some properties are required. Other properties are optional.</p>
+<h3 id="required-properties">Required Properties</h3>
+<dl>
+<dt>REQUEST_METHOD</dt>
+<dd>The HTTP request method. This must be one of "GET", "POST", "PUT", "DELETE", "HEAD", "PATCH", or "OPTIONS".</dd>
+<dt>SCRIPT_NAME</dt>
+<dd>The first part of the HTTP request's URI path that corresponds to the physical directory in which the Slim application is installed relative to the document root directory. This may be an empty string if the application is installed in the top-level of the document root directory. Non-empty values must begin with a <code>/</code> forward slash and must not end with a trailing forward slash.</dd>
+<dt>PATH_INFO</dt>
+<dd>The remaining part of the HTTP request's URI path that represents the Slim application route's "virtual" URI. This must begin with a <code>/</code> forward slash. A trailing slash is optional.</dd>
+<dt>QUERY_STRING</dt>
+<dd>The part of the HTTP request’s URI path after, but not including, the “?”. This may be an empty string if the current HTTP request does not specify a query string.</dd>
+<dt>SERVER_NAME</dt>
+<dd>This can create a fully qualified URL to a Slim application resource when combined with the Environment's <code>SCRIPT_NAME</code> and <code>PATH_INFO</code> values. This must not be an empty string. The <code>HTTP_HOST</code> value should be used instead if present. </dd>
+<dt>SERVER_PORT</dt>
+<dd>This can create a fully qualified URL to a Slim application resource when combined with the Environment's <code>SERVER_NAME</code>, <code>SCRIPT_NAME</code> and <code>PATH_INFO</code> values. This must be an integer.</dd>
+<dt>slim.url_scheme</dt>
+<dd>The HTTP request scheme. This must be one of “http” or “https”.</dd>
+<dt>slim.input</dt>
+<dd>The HTTP request body. This may be an empty string if the current HTTP request does not contain a body (i.e., a GET request).</dd>
+<dt>slim.errors</dt>
+<dd>A writable stream resource. This points to <code>php://stderr</code> by default.</dd>
+</dl>
+<h3 id="optional-properties">Optional Properties</h3>
+<dl>
+<dt>CONTENT_TYPE</dt>
+<dd>The HTTP request content type (e.g., <code>application/json;charset=utf8</code>)</dd>
+<dt>CONTENT_LENGTH</dt>
+<dd>The HTTP request content length. This must be an integer if present.</dd>
+<dt>HTTP_*</dt>
+<dd>The HTTP request headers sent by the client. These values are identical to their counterparts in the <code>$_SERVER</code> superglobal array. If present, these values must retain the "HTTP_" prefix.</dd>
+<dt>PHP_AUTH_USER</dt>
+<dd>The HTTP <code>Authentication</code> header's decoded username.</dd>
+<dt>PHP_AUTH_PW</dt>
+<dd>The HTTP <code>Authentication</code> header's decoded password.</dd>
+<dt>PHP_AUTH_DIGEST</dt>
+<dd>The raw HTTP <code>Authentication</code> header as sent by the HTTP client.</dd>
+<dt>AUTH_TYPE</dt>
+<dd>The HTTP <code>Authentication</code> header's authentication type (e.g., "Basic" or "Digest").</dd>
+</dl>
+<h2 id="environment-interface">Environment Interface</h2>
+<p>The Environment object implements the <code>\Slim\Interfaces\CollectionInterface</code> interface and provides these methods:</p>
+<ul>
+<li><code>set($key, $value)</code></li>
+<li><code>get($key, $defaultValue)</code></li>
+<li><code>replace(array $items)</code></li>
+<li><code>all()</code></li>
+<li><code>has($key)</code></li>
+<li><code>remove($key)</code></li>
+<li><code>clear()</code></li>
+<li><code>encrypt(CryptInterface $crypt)</code></li>
+<li><code>decrypt(CryptInterface $crypt)</code></li>
+</ul>
+<h2 id="mock-environments">Mock Environments</h2>
+<p>Each Slim application instantiates an Environment object using information from the current global environment. However, you may also create mock environment objects with custom information. Mock Environment objects are only useful when writing unit tests.</p>
+<pre><code>&lt;?php
+$env = \Slim\Environment::mock([
+    'REQUEST_METHOD' =&gt; 'PUT',
+    'REQUEST_URI' =&gt; '/foo/bar',
+    'QUERY_STRING' =&gt; 'abc=123&amp;foo=bar',
+    'SERVER_NAME' =&gt; 'example.com',
+    'CONTENT_TYPE' =&gt; 'application/json;charset=utf8',
+    'CONTENT_LENGTH' =&gt; 15,
+    'slim.input' =&gt; '{"test": "123"}'
+]);
+</code></pre>
 
             </div>
           </div>
@@ -166,7 +302,7 @@
         <a href="../request" class="btn btn-neutral float-right" title="Request"/>Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../introduction" class="btn btn-neutral" title="Introduction"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../lifecycle" class="btn btn-neutral" title="Lifecycle"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -192,7 +328,7 @@
 <div class="rst-versions" role="note" style="cursor: pointer">
     <span class="rst-current-version" data-toggle="rst-current-version">
         
-      <span><a href="../introduction" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      <span><a href="../lifecycle" style="color: #fcfcfc;">&laquo; Previous</a></span>
       <span style="margin-left: 15px"><a href="../request" style="color: #fcfcfc">Next &raquo;</a></span>
     </span>
 </div>

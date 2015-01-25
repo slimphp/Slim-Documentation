@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Slim Framework Documentation</title>
+  <title>Slim Framework</title>
   
 
   
@@ -34,7 +34,7 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
       <div class="wy-side-nav-search">
-        <a href="." class="icon icon-home"> Slim Framework Documentation</a>
+        <a href="." class="icon icon-home"> Slim Framework</a>
         
       </div>
 
@@ -42,16 +42,34 @@
       <ul class="current">
     
         
-            <li class="toctree-l1 ">
-                <a class="" href="introduction/">Introduction</a>
-            </li>
+        <span>Get Started</span>
+            
+                <li class="toctree-l1 ">
+                    <a class="" href="start/installation/">Installation</a>
+                    
+                </li>
+            
+                <li class="toctree-l1 ">
+                    <a class="" href="architecture/">Architecture</a>
+                    
+                </li>
+            
+                <li class="toctree-l1 ">
+                    <a class="" href="lifecycle/">Lifecycle</a>
+                    
+                </li>
+            
         
 
     
         
-            <li class="toctree-l1 ">
-                <a class="" href="environment/">Environment</a>
-            </li>
+        <span>Objects</span>
+            
+                <li class="toctree-l1 ">
+                    <a class="" href="environment/">Environment</a>
+                    
+                </li>
+            
         
 
     
@@ -77,9 +95,13 @@
 
     
         
-            <li class="toctree-l1 ">
-                <a class="" href="view/">View</a>
-            </li>
+        <span>Features</span>
+            
+                <li class="toctree-l1 ">
+                    <a class="" href="view/">View</a>
+                    
+                </li>
+            
         
 
     
@@ -125,6 +147,33 @@
         
 
     
+        
+        <span>Interfaces</span>
+            
+                <li class="toctree-l1 ">
+                    <a class="" href="interface_collection/">Collection</a>
+                    
+                </li>
+            
+        
+
+    
+        
+        <span>Contributors</span>
+            
+                <li class="toctree-l1 ">
+                    <a class="" href="contributors/guidelines/">Guidelines</a>
+                    
+                </li>
+            
+                <li class="toctree-l1 ">
+                    <a class="" href="contributors/strategy/">Branching Strategy</a>
+                    
+                </li>
+            
+        
+
+    
 </ul>
 
       </div>
@@ -154,13 +203,16 @@
 </div>
           <div role="main">
             <div class="section">
-              <h1 id="welcome-to-mkdocs">Welcome to MkDocs</h1>
-<p>For full documentation visit <a href="http://mkdocs.org">mkdocs.org</a>.</p>
+              <h1 id="slim-framework">Slim Framework</h1>
+<p>Slim is a micro framework that helps you quickly write simple yet powerful PHP web applications and APIs. It dispatches HTTP requests to the appropriate callbacks for a specific HTTP URI and method. Slim also supports concentric middleware layers around your Slim application.</p>
 <h2 id="usage">Usage</h2>
-<h2 id="system-requirements">System Requirements</h2>
-<p>PHP 5.4 or newer</p>
-<h2 id="contributor-guidelines">Contributor Guidelines</h2>
-<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus laudantium temporibus aperiam numquam id, doloremque excepturi rerum consequatur quae quis iure deserunt blanditiis assumenda velit? Deleniti quisquam saepe pariatur expedita.</p>
+<pre><code>&lt;?php
+$app = new \Slim\App();
+$app-&gt;get('/hello/:name', function ($name) {
+    echo "Hello, $name";
+});
+$app-&gt;run();
+</code></pre>
 <h2 id="support">Support</h2>
 <ul>
 <li><a href="http://www.slimframework.com">Website</a></li>
@@ -194,7 +246,7 @@ THE SOFTWARE.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="introduction/" class="btn btn-neutral float-right" title="Introduction"/>Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="start/installation/" class="btn btn-neutral float-right" title="Installation"/>Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
     </div>
@@ -222,7 +274,7 @@ THE SOFTWARE.</p>
     <span class="rst-current-version" data-toggle="rst-current-version">
         
       <span><a href="" style="color: #fcfcfc;">&laquo; Previous</a></span>
-      <span style="margin-left: 15px"><a href="introduction/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span style="margin-left: 15px"><a href="start/installation/" style="color: #fcfcfc">Next &raquo;</a></span>
     </span>
 </div>
 </body>
