@@ -1,6 +1,6 @@
 # The Request Object
 
-The Request object encapsulates the HTTP request data from the current Enironment object. Each Slim application has one Request object. You use the Request object to inspect the current HTTP request's method, headers, and body. The Request object is registered as a Pimple service on the application instance. You can fetch the Request object like this:
+The Request object encapsulates the HTTP request data from the current Environment object. Each Slim application has one Request object. You use the Request object to inspect the current HTTP request's method, headers, and body. The Request object is registered as a Pimple service on the application instance. You can fetch the Request object like this:
 
     <?php
     $request = $app['request'];
