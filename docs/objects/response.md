@@ -7,7 +7,7 @@ The Response object encapsulates the HTTP response returned by the Slim applicat
 
 ## Response Status
 
-The Response object has a numeric HTTP status code. The default status code is `200`, and you can change or inspect the status code with the Response object's getter and setter methods.
+The Response object has a numeric HTTP status code. The default status code is `200`, and you can change or inspect the status code with the Response object's `setStatus()` and `getStatus()` methods.
 
     <?php
     // Set status
@@ -86,11 +86,51 @@ You can remove a header from the HTTP response with the Response object's `remov
 
 ## Response Cookies
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam tempore esse officia porro ea animi, consectetur ad minima velit vero temporibus autem accusantium quae nulla quam distinctio nesciunt eaque nobis!
+The Response object manages a collection of cookies to be returned with the HTTP response.
+
+### Fetch All Cookies
+
+You can fetch an associative array of HTTP response cookies with the Response object's `getCookies()` method.
+
+    <?php
+    $cookies = $app['response']->getCookies();
+
+### Detect Cookie
+
+You can detect the presence of a HTTP response cookie with the Response object's `hasCookie($key)` method.
+
+    <?php
+    if ($app['response']->hasCookie('authenticated') === 'yes') {
+        // Do something
+    }
+
+### Set Multiple Cookies
+
+You can set multiple HTTP response cookies with the Response object's `setCookies()` method. This method accepts an associative array of cookie names and values. These cookies _replace_ existing HTTP response cookies with the same names.
+
+    <?php
+    $app['response']->setCookies([
+        'authenticated' => 'yes',
+        'authenticatedHash' => 'wdfskldhuskdjh'
+    ]);
+
+### Set One Cookie
+
+You can set one HTTP response cookie with the Response object's `setCookie()` method.
+
+    <?php
+    $app['response']->setCookie('splash', 'seen');
+
+### Remove Cookie
+
+You can remove a cookie from the HTTP response with the Response object's `removeCookie($key)` method.
+
+    <?php
+    $app['response']->removeCookie('splash');
 
 ## Response Body
 
-The Response object's body is a PHP stream resource. _It is not a string_. By default, the Response object body is a readable and writable stream at `php://temp`. However, you can substitute the default stream with any valid PHP stream resource. This lets you send a very large HTTP response body that may not otherwise fit into available memory. The Response object provides these methods to inspect and manipulate its body property.
+The Response object's body is a PHP stream resource. _It is not a string_. By default, the Response object body is a stream readable from and writable to `php://temp`. However, you can substitute the default stream with any valid PHP stream resource. This lets you send a very large HTTP response body that may not otherwise fit into available memory. The Response object provides these methods to inspect and manipulate its body property.
 
 ### Append Body
 
@@ -122,8 +162,62 @@ This method <em>does not</em> initiate a file download. Instead, this method onl
 
 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea, sed? Sit aut est ipsam, accusamus molestias impedit assumenda veritatis, alias temporibus tempore unde quaerat eligendi odio nulla consequuntur sequi cumque.
 
-### Output JSON
+### Write JSON
 
-### Output XML
+Slim provides first-class support for JSON data. You can write JSON data directly to the response object with the Response object's `writeJson()` method. This method accepts one argument, and the argument can be an array, a JSON string, or an object that implements a `toJson()` or `asJson()` method.
+The Response object's `writeJson()` method automatically sets the appropriate `Content-Type` and `Content-Length` response headers.
+
+    <?php
+    // Write JSON from array
+    $data = [
+        'records' => [
+            (object)[
+                'id' => '1',
+                'name' => 'John'
+            ],
+            (object)[
+                'id' => '2',
+                'name' => 'Sally'
+            ],
+            (object)[
+                'id' => '3',
+                'name' => 'Sue'
+            ]
+        ]
+    ];
+    $app['response']->writeJson($data);
+
+    // Write JSON from string
+    $data = '{"records": [{ "id": "1", "name": "John" }]}';
+    $app['response']->writeJson($data);
+
+### Write XML
+
+Slim provides first-class support for XML data. You can write XML data directly to the response object with the Response object's `writeXml()` method. This method accepts one argument, and the argument can be an array, a XML string, or an object that implements a `toXml()` or `asXml()` method.
+The Response object's `writeXml()` method automatically sets the appropriate `Content-Type` and `Content-Length` response headers.
+
+    <?php
+    // Write XML from array
+    $data = [
+        'records' => [
+            'john' => (object)[
+                'id' => '1',
+                'name' => 'John'
+            ],
+            'sally' => (object)[
+                'id' => '2',
+                'name' => 'Sally'
+            ],
+            'sue' => (object)[
+                'id' => '3',
+                'name' => 'Sue'
+            ]
+        ]
+    ];
+    $app['response']->writeXml($data);
+
+    // Write XML from string
+    $data = '<records><john id="1" name="john"/></records>';
+    $app['response']->writeXml($data);
 
 ### Initiate File Download
