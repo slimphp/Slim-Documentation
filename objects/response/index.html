@@ -82,6 +82,16 @@
                         
                             <li class="toctree-l2"><a href="#the-response-object">The Response Object</a></li>
                             
+                                <li><a class="toctree-l3" href="#response-status">Response Status</a></li>
+                            
+                                <li><a class="toctree-l3" href="#response-headers">Response Headers</a></li>
+                            
+                                <li><a class="toctree-l3" href="#response-cookies">Response Cookies</a></li>
+                            
+                                <li><a class="toctree-l3" href="#response-body">Response Body</a></li>
+                            
+                                <li><a class="toctree-l3" href="#response-helpers">Response Helpers</a></li>
+                            
                         
                         </ul>
                     
@@ -205,7 +215,180 @@
           <div role="main">
             <div class="section">
               <h1 id="the-response-object">The Response Object</h1>
-<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Recusandae eaque excepturi laboriosam, odit dolorum sequi maxime. Consectetur voluptate, velit ipsum ex perspiciatis commodi consequatur nam quos quam voluptatibus fuga nesciunt.</p>
+<p>The Response object encapsulates the HTTP response returned by the Slim application. Each Slim application has one Response object. You use the Response object to set the HTTP response status, headers, and body. The Response object is registered as a Pimple service on the application instance. You can fetch the Response object like this:</p>
+<pre><code>&lt;?php
+$response = $app['response'];
+</code></pre>
+<h2 id="response-status">Response Status</h2>
+<p>The Response object has a numeric HTTP status code. The default status code is <code>200</code>, and you can change or inspect the status code with the Response object's <code>setStatus()</code> and <code>getStatus()</code> methods.</p>
+<pre><code>&lt;?php
+// Set status
+$app['response']-&gt;setStatus(302);
+
+// Get status
+$status = $app['response']-&gt;getStatus();
+</code></pre>
+<h2 id="response-headers">Response Headers</h2>
+<p>The Response object manages a collection of headers to be returend with the HTTP response.</p>
+<h3 id="fetch-all-headers">Fetch All Headers</h3>
+<p>You can fetch an associative array of HTTP response headers with the Response object's <code>getHeaders()</code> method.</p>
+<pre><code>&lt;?php
+$headers = $app['response']-&gt;getHeaders();
+</code></pre>
+<h3 id="fetch-one-header">Fetch One Header</h3>
+<p>You can fetch a single HTTP response header with the Response object's <code>getHeader($key)</code> method.</p>
+<pre><code>&lt;?php
+$headerValue = $app['response']-&gt;getHeader('X-Api-Key');
+</code></pre>
+<h3 id="detect-header">Detect Header</h3>
+<p>You can detect the presence of a HTTP response header with the Response object's <code>hasHeader($key)</code> method.</p>
+<pre><code>&lt;?php
+if ($app['response']-&gt;hasHeader('Vary') === true) {
+    // Do something
+}
+</code></pre>
+<h3 id="set-multiple-headers">Set Multiple Headers</h3>
+<p>You can set multiple HTTP response headers with the Response object's <code>setHeaders()</code> method. This method accepts an associative array of header names and values. These headers <em>replace</em> existing HTTP response headers with the same names.</p>
+<pre><code>&lt;?php
+$app['response']-&gt;setHeaders([
+    'X-Api-Remaining' =&gt; 300,
+    'X-Api-Used' =&gt; 100
+]);
+</code></pre>
+<h3 id="set-one-header">Set One Header</h3>
+<p>You can set one HTTP response header with the Response object's <code>setHeader()</code> method.</p>
+<pre><code>&lt;?php
+$app['response']-&gt;setHeader('Content-type', 'application/json');
+</code></pre>
+<h3 id="add-multiple-headers">Add Multiple Headers</h3>
+<p>You can add multiple HTTP response headers with the Response object's <code>addHeaders()</code> method. This method accepts an associative array of header names and values. This method <em>appends</em> data to existing HTTP response headers with the same names. A Response object header with multiple values serializes into a comma-delimited header value in the HTTP response.</p>
+<pre><code>&lt;?php
+$app['response']-&gt;addHeaders([
+    'X-Api-Remaining' =&gt; 300,
+    'X-Api-Used' =&gt; 100
+]);
+</code></pre>
+<h3 id="add-one-header">Add One Header</h3>
+<p>You can add one HTTP response header with the Response object's <code>addHeader()</code> method. This method <em>appends</em> data to an existing HTTP response header with the same name. A Response object header with multiple values serializes into a comma-delimited header value in the HTTP response.</p>
+<pre><code>&lt;?php
+$app['response']-&gt;addHeader('X-Api-Token', '1');
+</code></pre>
+<h3 id="remove-header">Remove Header</h3>
+<p>You can remove a header from the HTTP response with the Response object's <code>removeHeader($key)</code> method.</p>
+<pre><code>&lt;?php
+$app['response']-&gt;removeHeader('X-Api-Token');
+</code></pre>
+<h2 id="response-cookies">Response Cookies</h2>
+<p>The Response object manages a collection of cookies to be returned with the HTTP response.</p>
+<h3 id="fetch-all-cookies">Fetch All Cookies</h3>
+<p>You can fetch an associative array of HTTP response cookies with the Response object's <code>getCookies()</code> method.</p>
+<pre><code>&lt;?php
+$cookies = $app['response']-&gt;getCookies();
+</code></pre>
+<h3 id="detect-cookie">Detect Cookie</h3>
+<p>You can detect the presence of a HTTP response cookie with the Response object's <code>hasCookie($key)</code> method.</p>
+<pre><code>&lt;?php
+if ($app['response']-&gt;hasCookie('authenticated') === 'yes') {
+    // Do something
+}
+</code></pre>
+<h3 id="set-multiple-cookies">Set Multiple Cookies</h3>
+<p>You can set multiple HTTP response cookies with the Response object's <code>setCookies()</code> method. This method accepts an associative array of cookie names and values. These cookies <em>replace</em> existing HTTP response cookies with the same names.</p>
+<pre><code>&lt;?php
+$app['response']-&gt;setCookies([
+    'authenticated' =&gt; 'yes',
+    'authenticatedHash' =&gt; 'wdfskldhuskdjh'
+]);
+</code></pre>
+<h3 id="set-one-cookie">Set One Cookie</h3>
+<p>You can set one HTTP response cookie with the Response object's <code>setCookie()</code> method.</p>
+<pre><code>&lt;?php
+$app['response']-&gt;setCookie('splash', 'seen');
+</code></pre>
+<h3 id="remove-cookie">Remove Cookie</h3>
+<p>You can remove a cookie from the HTTP response with the Response object's <code>removeCookie($key)</code> method.</p>
+<pre><code>&lt;?php
+$app['response']-&gt;removeCookie('splash');
+</code></pre>
+<h2 id="response-body">Response Body</h2>
+<p>The Response object's body is a PHP stream resource. <em>It is not a string</em>. By default, the Response object body is a stream readable from and writable to <code>php://temp</code>. However, you can substitute the default stream with any valid PHP stream resource. This lets you send a very large HTTP response body that may not otherwise fit into available memory. The Response object provides these methods to inspect and manipulate its body property.</p>
+<h3 id="append-body">Append Body</h3>
+<p>You can append text to the end of the current HTTP response body with the Response object's <code>write()</code> method.</p>
+<pre><code>&lt;?php
+$app['response']-&gt;write('Content goes here');
+</code></pre>
+<h3 id="fetch-body">Fetch Body</h3>
+<p>You can fetch the current HTTP response body with the Response object's <code>getBody()</code> method. This returns a reference to the PHP stream resource.</p>
+<pre><code>&lt;?php
+$bodyStream = $app['response']-&gt;getBody();
+</code></pre>
+<h3 id="set-body">Set Body</h3>
+<p>You can replace the current HTTP response body with a new PHP stream resource using the Response object's <code>setBody()</code> method.</p>
+<pre><code>&lt;?php
+$newBody = fopen('/path/to/large/file.txt', 'rb');
+$app['response']-&gt;setBody($newBody);
+</code></pre>
+<div class="wy-alert wy-alert-info">
+This method <em>does not</em> initiate a file download. Instead, this method only specifies a new <em>origin</em> of data that will become the HTTP response body. We'll discuss file downloads momentarily.
+</div>
+
+<h2 id="response-helpers">Response Helpers</h2>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea, sed? Sit aut est ipsam, accusamus molestias impedit assumenda veritatis, alias temporibus tempore unde quaerat eligendi odio nulla consequuntur sequi cumque.</p>
+<h3 id="write-json">Write JSON</h3>
+<p>Slim provides first-class support for JSON data. You can write JSON data directly to the response object with the Response object's <code>writeJson()</code> method. This method accepts one argument, and the argument can be an array, a JSON string, or an object that implements a <code>toJson()</code> or <code>asJson()</code> method.
+The Response object's <code>writeJson()</code> method automatically sets the appropriate <code>Content-Type</code> and <code>Content-Length</code> response headers.</p>
+<pre><code>&lt;?php
+// Write JSON from array
+$data = [
+    'records' =&gt; [
+        (object)[
+            'id' =&gt; '1',
+            'name' =&gt; 'John'
+        ],
+        (object)[
+            'id' =&gt; '2',
+            'name' =&gt; 'Sally'
+        ],
+        (object)[
+            'id' =&gt; '3',
+            'name' =&gt; 'Sue'
+        ]
+    ]
+];
+$app['response']-&gt;writeJson($data);
+
+// Write JSON from string
+$data = '{"records": [{ "id": "1", "name": "John" }]}';
+$app['response']-&gt;writeJson($data);
+</code></pre>
+<h3 id="write-xml">Write XML</h3>
+<p>Slim provides first-class support for XML data. You can write XML data directly to the response object with the Response object's <code>writeXml()</code> method. This method accepts one argument, and the argument can be an array, a XML string, or an object that implements a <code>toXml()</code> or <code>asXml()</code> method.
+The Response object's <code>writeXml()</code> method automatically sets the appropriate <code>Content-Type</code> and <code>Content-Length</code> response headers.</p>
+<pre><code>&lt;?php
+// Write XML from array
+$data = [
+    'records' =&gt; [
+        'john' =&gt; (object)[
+            'id' =&gt; '1',
+            'name' =&gt; 'John'
+        ],
+        'sally' =&gt; (object)[
+            'id' =&gt; '2',
+            'name' =&gt; 'Sally'
+        ],
+        'sue' =&gt; (object)[
+            'id' =&gt; '3',
+            'name' =&gt; 'Sue'
+        ]
+    ]
+];
+$app['response']-&gt;writeXml($data);
+
+// Write XML from string
+$data = '&lt;records&gt;&lt;john id="1" name="john"/&gt;&lt;/records&gt;';
+$app['response']-&gt;writeXml($data);
+</code></pre>
+<h3 id="initiate-file-download">Initiate File Download</h3>
 
             </div>
           </div>
