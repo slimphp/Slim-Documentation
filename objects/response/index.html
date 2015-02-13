@@ -313,37 +313,61 @@ $newResponse = $oldResponse-&gt;withAddedHeader(
 $newResponse = $oldResponse-&gt;withoutHeader('Allow');
 </code></pre>
 <h2 id="response-cookies">Response Cookies</h2>
-<p>The Response object manages a collection of cookies to be returned with the HTTP response.</p>
-<h3 id="fetch-all-cookies">Fetch All Cookies</h3>
-<p>You can fetch an associative array of HTTP response cookies with the Response object's <code>getCookies()</code> method.</p>
-<pre><code>&lt;?php
-$cookies = $app['response']-&gt;getCookies();
+<p>The Response object manages a collection of cookies that will be serialized into the response header and returned to the HTTP client. Each Response object provides the following methods to curate its collection of HTTP cookies. Remember, the Response object is immutable, and you must use the appropriate <code>with*()</code> methods to fetch a <em>new</em> Response object with modified cookies.</p>
+<p>Unlike Response headers, Response cookies have a name that is associated with a fixed set of properties. Specifically, each Response cookie always has these exact properties:</p>
+<dl>
+<dt>value</dt>
+<dd>A string.</dd>
+<dt>expires</dt>
+<dd>An integer unix timestamp, or a string to be converted with <code>strtotime()</code>.</dd>
+<dt>path</dt>
+<dd>Absolute URI path string beneath which the cookie is valid.</dd>
+<dt>domain</dt>
+<dd>Domain name string beneath which the cookie is valid.</dd>
+<dt>secure</dt>
+<dd>Is this cookie transmitted over HTTPS only?</dd>
+<dt>httponly</dt>
+<dd>Is this cookie transmitted via HTTP protocol only?</dd>
+</dl>
+<p>Fortunately, you don't have to define these settings every time you set a new cookie. Instead, you define the default cookie settings when you instantiate a Slim application. Then you simply pass the desired cookie value when you set a new Response cookie. Look for examples below.</p>
+<h3 id="get-all-cookies">Get All Cookies</h3>
+<p>You can fetch an associative array of HTTP response cookies with the Response object's <code>getCookies()</code> method. This returns an associative array whose keys are cookie names. The array's values are single dimensional arrays that contain the properties listed above. This is an example data structure potentially returned by the Response object's <code>getCookies()</code> method.</p>
+<pre><code>[
+    'user' =&gt; [
+        'value' =&gt; 'Bob',
+        'expires' =&gt; '2 days',
+        'path' =&gt; '/',
+        'domain' =&gt; 'example.com',
+        'secure' =&gt; true,
+        'httponly' =&gt; true
+    ]
+]
 </code></pre>
 <h3 id="detect-cookie">Detect Cookie</h3>
-<p>You can detect the presence of a HTTP response cookie with the Response object's <code>hasCookie($key)</code> method.</p>
+<p>You can detect the presence of an HTTP cookie with the Response object's <code>hasCookie($name)</code> method. This method returns <code>true</code> or <code>false</code>.</p>
 <pre><code>&lt;?php
-if ($app['response']-&gt;hasCookie('authenticated') === 'yes') {
+if ($response-&gt;hasCookie('user') === true) {
     // Do something
 }
 </code></pre>
-<h3 id="set-multiple-cookies">Set Multiple Cookies</h3>
-<p>You can set multiple HTTP response cookies with the Response object's <code>setCookies()</code> method. This method accepts an associative array of cookie names and values. These cookies <em>replace</em> existing HTTP response cookies with the same names.</p>
+<h3 id="set-cookie">Set Cookie</h3>
+<p>You can set a new cookie with the Response object's <code>withCookie($name, $value)</code> method. Remember, the Response object is immutable. This method returns a new <em>copy</em> of the Response object that has the new cookie.</p>
 <pre><code>&lt;?php
-$app['response']-&gt;setCookies([
-    'authenticated' =&gt; 'yes',
-    'authenticatedHash' =&gt; 'wdfskldhuskdjh'
+$newResponse = $oldResponse-&gt;withCookie('user', 'Bob');
+</code></pre>
+<p>This example creates a new cookie whose name is "user". The cookie's <em>value</em> property is "Bob". Its other properties assume the default values provided during application instantiation. However, you <em>can</em> override the default cookie properties by passing an associative array as the second argument to the <code>withCookie()</code> method. This array should contain only the properties different from the default cookie properties.</p>
+<pre><code>&lt;?php
+$newResponse = $oldResponse-&gt;withCookie('user', [
+    'value' =&gt; 'Bob',
+    'expires' =&gt; '7 days'
 ]);
 </code></pre>
-<h3 id="set-one-cookie">Set One Cookie</h3>
-<p>You can set one HTTP response cookie with the Response object's <code>setCookie()</code> method.</p>
-<pre><code>&lt;?php
-$app['response']-&gt;setCookie('splash', 'seen');
-</code></pre>
 <h3 id="remove-cookie">Remove Cookie</h3>
-<p>You can remove a cookie from the HTTP response with the Response object's <code>removeCookie($key)</code> method.</p>
+<p>You can remove a cookie with the Response object's <code>withoutCookie($name)</code> method. Remember, the Response object is immutable. This method returns a new <em>copy</em> of the Response object that does not have the specified cookie.</p>
 <pre><code>&lt;?php
-$app['response']-&gt;removeCookie('splash');
+$newResponse = $oldResponse-&gt;withoutCookie('user');
 </code></pre>
+<p>Technically, this method <em>sets</em> a new cookie whose value is empty and whose expiration date is in the past. This prompts the HTTP client to invalidate and destroy its local copy of the cookie.</p>
 <h2 id="response-body">Response Body</h2>
 <p>The Response object's body is a PHP stream resource. <em>It is not a string</em>. By default, the Response object body is a stream readable from and writable to <code>php://temp</code>. However, you can substitute the default stream with any valid PHP stream resource. This lets you send a very large HTTP response body that may not otherwise fit into available memory. The Response object provides these methods to inspect and manipulate its body property.</p>
 <h3 id="append-body">Append Body</h3>
