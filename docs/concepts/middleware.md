@@ -14,7 +14,7 @@ Each middleware _may_ invoke its next interior middlware and pass it the current
 
 Here's a diagram that hopefully illustrates the middleware process flow:
 
-![Middleware flow](../images/middleware.png 'Middleware')
+![Middleware flow](/images/middleware.png 'Middleware')
 
 # How do I write middleware?
 

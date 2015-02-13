@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Lifecycle - Slim Framework</title>
+  <title>Middleware - Slim Framework</title>
   
 
   
@@ -60,8 +60,24 @@
                     
                 </li>
             
-                <li class="toctree-l1 ">
-                    <a class="" href="../middleware">Middleware</a>
+                <li class="toctree-l1 current">
+                    <a class="current" href=".">Middleware</a>
+                    
+                        <ul>
+                        
+                            <li class="toctree-l2"><a href="#what-is-middleware">What is middleware?</a></li>
+                            
+                        
+                            <li class="toctree-l2"><a href="#how-does-middleware-work">How does middleware work?</a></li>
+                            
+                        
+                            <li class="toctree-l2"><a href="#how-do-i-write-middleware">How do I write middleware?</a></li>
+                            
+                        
+                            <li class="toctree-l2"><a href="#how-do-i-add-middleware">How do I add middleware?</a></li>
+                            
+                        
+                        </ul>
                     
                 </li>
             
@@ -70,21 +86,8 @@
                     
                 </li>
             
-                <li class="toctree-l1 current">
-                    <a class="current" href=".">Lifecycle</a>
-                    
-                        <ul>
-                        
-                            <li class="toctree-l2"><a href="#application-lifecycle">Application Lifecycle</a></li>
-                            
-                                <li><a class="toctree-l3" href="#1-instantiation">1. Instantiation</a></li>
-                            
-                                <li><a class="toctree-l3" href="#2-route-definitions">2. Route Definitions</a></li>
-                            
-                                <li><a class="toctree-l3" href="#3-application-runner">3. Application Runner</a></li>
-                            
-                        
-                        </ul>
+                <li class="toctree-l1 ">
+                    <a class="" href="../life-cycle">Lifecycle</a>
                     
                 </li>
             
@@ -217,7 +220,7 @@
           <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../..">Docs</a> &raquo;</li>
-    <li>Lifecycle</li>
+    <li>Middleware</li>
       <li class="wy-breadcrumbs-aside">
         
       </li>
@@ -226,27 +229,59 @@
 </div>
           <div role="main">
             <div class="section">
-              <h1 id="application-lifecycle">Application Lifecycle</h1>
-<h2 id="1-instantiation">1. Instantiation</h2>
-<p>First, you instantiate the <code>\Slim\App</code> class. This is the Slim application object. During instantiation, Slim registers default services for each application dependency. The application constructor accepts an optional settings array that configures the application's behavior.</p>
-<h2 id="2-route-definitions">2. Route Definitions</h2>
-<p>Second, you define routes using the application instance's <code>get()</code>, <code>post()</code>, <code>put()</code>, <code>delete()</code>, <code>patch()</code>, <code>head()</code>, and <code>options()</code> proxy methods. These instance methods register a route with the application's Router object. The Router object maintains a separate route queue for each HTTP method. Each queued route object has an HTTP method, an HTTP URI, and a callback.</p>
-<h2 id="3-application-runner">3. Application Runner</h2>
-<p>Third, you invoke the application instance's <code>run()</code> method after you define the application's routes.</p>
-<h3 id="a-enter-middleware-stack">A. Enter Middleware Stack</h3>
-<p>The <code>run()</code> method begins to inwardly traverse the application's middleware stack. This is a concentric structure of middleware layers that receive (and optionally manipulate) the Environment, Request, and Response objects before (and after) the Slim application runs. The Slim application is the inner-most layer of the concentric middleware structure. Each middleware layer is invoked inwardly beginning from the outer-most layer.</p>
-<h3 id="b-run-application">B. Run Application</h3>
-<p>After the <code>run()</code> method reaches the inner-most middleware layer, it invokes the applciation instance itself by dispatching the current HTTP request to the appropriate application route object. To do so, the <code>run()</code> method invokes the application instance's <code>call()</code> method (this method has the same signature and behavior as middleware). The <code>call()</code> method invokes the application instance's <code>dispatch()</code> method.</p>
-<h3 id="c-iterate-matching-routes">C. Iterate Matching Routes</h3>
-<p>The application instance's <code>dispatch()</code> method asks the Router object for all Route objects that match the current HTTP request method and URI. The Router object iterates the queue that matches the current HTTP request method. Each Route object in the queue is inspected in sequential order.</p>
-<p>The application instance's <code>dispatch()</code> method iterates the matching routes returned from the Router object, and it invokes each Route object's <code>dispatch()</code> method. The Route object's <code>dispatch()</code> method invokes the Route object's callback routine.</p>
-<p>Only one matching route is invoked unless the current iteration's Route object callback invokes the application instance's <code>pass()</code> method. If the <code>pass()</code> method is invoked, the subsequent matching Route object is dispatched until a Route callback successfully runs or no matching Route objects remain.</p>
-<p>When a Route callback runs successfully, any <code>echo()</code> output emitted by the Route object's callback routine is captured into a temporary output buffer. This output is appended to the current Response object's body property.</p>
-<p>If there are no matching Route objects, or if all matching Route object's invoke the <code>pass()</code> method, the application instance's <code>notFound()</code> method is invoked. This method invokes the registered "Not Found" handler which sets the Response object's status to <code>404</code> and appends the handler's captured output to the Response object's body.</p>
-<h3 id="d-exit-middleware-stack">D. Exit Middleware Stack</h3>
-<p>After the application instance's <code>call()</code> method completes, the application instance's <code>run()</code> method exits the middleware stack. Remember, the middleware stack is a concentric structure. Each middleware layer reclaims control outwardly beginning from the inner-most layer.</p>
-<h3 id="e-send-http-response">E. Send HTTP Response</h3>
-<p>After the outer-most middleware layer cedes control, the application instance prepares, serializes, and returns the HTTP response. This occurs in the application instance's <code>finalize()</code> method. This method encrypts and persists cookie and session data if present. Finally, the application instance's <code>finalize()</code> method invokes the Response object's <code>send()</code> method to serialize the Response object's headers with PHP's native <code>header()</code> method and output the Response object's body with the <code>echo()</code> method.</p>
+              <h1 id="what-is-middleware">What is middleware?</h1>
+<p>A middleware is a <em>callable</em> that is invoked with three arguments: a Request object, a Response object, and a <em>next</em> middleware. It can do whatever is appropriate with these objects. The only hard requirement is that a middleware MUST return a Response object. That's it.</p>
+<p>Each middleware may (or may not) choose to invoke the next middleware argument and pass it Request and Response objects as arguments.</p>
+<h1 id="how-does-middleware-work">How does middleware work?</h1>
+<p>Different frameworks use middleware differently. Slim adds middleware as concentric layers surrounding your core application. Each new middleware layer surrounds any existing middleware layers. The concentric structure expands outwardly as additional middleware layers are added.</p>
+<p>When you run the Slim application, the Request and Response objects traverse the middleware structure from the outside in. They first enter the outer-most middleware, then the next outer-most middleware, (and so on), until they ultimately arrive at the Slim application itself. After the Slim application dispatches the appropriate route, the resultant Response object exits the Slim application and traverse the middleware structure from the inside out. Ultimately, a final Response object exits the outer-most middleware, is serialized into a raw HTTP response, and is returned to the HTTP client.</p>
+<p>Each middleware <em>may</em> invoke its next interior middlware and pass it the current Request and Response objects as arguments. Each middlware layer MUST return a Response object.</p>
+<p>Here's a diagram that hopefully illustrates the middleware process flow:</p>
+<p><img alt="Middleware flow" src="../../../images/middleware.png" title="Middleware" /></p>
+<h1 id="how-do-i-write-middleware">How do I write middleware?</h1>
+<p>Middleware is any <em>callable</em> that receives three arguments: a Request object, a Response object, and a <em>next</em> middleware. The middleware MUST return a Response object. This example middleware is a Closure.</p>
+<pre><code>&lt;?php
+function ($request, $response, $next) {
+    $response-&gt;write('BEFORE');
+    $response = $next($request, $response);
+    $response-&gt;write('AFTER');
+
+    return $response;
+};
+</code></pre>
+<p>This example middleware is an invokable class that implements the magic <code>__invoke()</code> method.</p>
+<pre><code>&lt;?php
+class ExampleMiddleware
+{
+    public function __invoke($request, $response, $next)
+    {
+        $response-&gt;write('BEFORE');
+        $response = $next($request, $response);
+        $response-&gt;write('AFTER');
+
+        return $response;
+    }
+}
+</code></pre>
+<h1 id="how-do-i-add-middleware">How do I add middleware?</h1>
+<p>Add middleware to your Slim application with the <code>\Slim\App</code> instance's <code>add()</code> method. This example adds the Closure middleware example above:</p>
+<pre><code>&lt;?php
+$app = new \Slim\App();
+$app-&gt;add(function ($request, $response, $next) {
+    $response-&gt;write('BEFORE');
+    $response = $next($request, $response);
+    $response-&gt;write('AFTER');
+
+    return $response;
+});
+$app-&gt;get('/', function ($req, $res) {
+    echo ' Hello ';
+});
+$app-&gt;run();
+</code></pre>
+<p>This would output this HTTP response body:</p>
+<pre><code>BEFORE Hello AFTER
+</code></pre>
 
             </div>
           </div>
@@ -254,10 +289,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../../objects/environment" class="btn btn-neutral float-right" title="Environment"/>Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../value-objects" class="btn btn-neutral float-right" title="Value Objects"/>Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../value-objects" class="btn btn-neutral" title="Value Objects"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../architecture" class="btn btn-neutral" title="Architecture"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -283,8 +318,8 @@
 <div class="rst-versions" role="note" style="cursor: pointer">
     <span class="rst-current-version" data-toggle="rst-current-version">
         
-      <span><a href="../value-objects" style="color: #fcfcfc;">&laquo; Previous</a></span>
-      <span style="margin-left: 15px"><a href="../../objects/environment" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../architecture" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      <span style="margin-left: 15px"><a href="../value-objects" style="color: #fcfcfc">Next &raquo;</a></span>
     </span>
 </div>
 </body>
