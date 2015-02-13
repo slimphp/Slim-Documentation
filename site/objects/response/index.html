@@ -231,68 +231,86 @@
           <div role="main">
             <div class="section">
               <h1 id="the-response-object">The Response Object</h1>
-<p>The Response object encapsulates the HTTP response returned by the Slim application. Each Slim application has one Response object. You use the Response object to set the HTTP response status, headers, and body. The Response object is registered as a Pimple service on the application instance. You can fetch the Response object like this:</p>
-<pre><code>&lt;?php
-$response = $app['response'];
-</code></pre>
+<p>The Response object encapsulates the HTTP response returned by the Slim application. You use the Response object to set the HTTP response status, headers, and body that are ultimately returned to the HTTP client.</p>
+<p>The Response object is a <em>value object</em>, and it is immutable. You can never change a given Response object, but you can create a cloned Response object with new property values using any of the Response object's <code>with*()</code> methods.</p>
+<p>Whereever you are within a Slim application (e.g. a middleware layer, a route callable, or a Not Found handler), you will be given the latest Request and Response objects.</p>
 <h2 id="response-status">Response Status</h2>
-<p>The Response object has a numeric HTTP status code. The default status code is <code>200</code>, and you can change or inspect the status code with the Response object's <code>setStatus()</code> and <code>getStatus()</code> methods.</p>
+<p>The Response object has a numeric HTTP status code. The default status code is <code>200</code>. You can fetch the status code with the Response object's <code>getStatusCode()</code> method.</p>
 <pre><code>&lt;?php
-// Set status
-$app['response']-&gt;setStatus(302);
-
-// Get status
-$status = $app['response']-&gt;getStatus();
+$status = $response-&gt;getStatusCode();
+</code></pre>
+<p>If you need to change a Response object's status code, you must request a new Response object that has the new status code with the Response object's <code>withStatus($code)</code> method.</p>
+<pre><code>&lt;?php
+$newResponse = $oldResponse-&gt;withStatus(404);
 </code></pre>
 <h2 id="response-headers">Response Headers</h2>
-<p>The Response object manages a collection of headers to be returend with the HTTP response.</p>
-<h3 id="fetch-all-headers">Fetch All Headers</h3>
-<p>You can fetch an associative array of HTTP response headers with the Response object's <code>getHeaders()</code> method.</p>
-<pre><code>&lt;?php
-$headers = $app['response']-&gt;getHeaders();
+<p>The Response object manages a collection of headers that will be returned to the HTTP client. Each Response object provides the following methods to curate its collection of HTTP headers. Remember, the Response object is immutable, and you must use the appropriate <code>with*()</code> methods to fetch a <em>new</em> Response object with modified headers.</p>
+<h3 id="get-all-headers">Get All Headers</h3>
+<p>You can fetch an associative array of HTTP response headers with the Response object's <code>getHeaders()</code> method. This returns an associative array whose keys are header names. The array's values are single dimensional arrays that contain one or more string values associated with each header name. This is an example data structure potentially returned by the Response object's <code>getHeaders()</code> method.</p>
+<pre><code>[
+    'Allow' =&gt; [
+        'GET',
+        'HEAD',
+        'DELETE'
+    ]
+]
 </code></pre>
-<h3 id="fetch-one-header">Fetch One Header</h3>
-<p>You can fetch a single HTTP response header with the Response object's <code>getHeader($key)</code> method.</p>
+<p>This example demonstrates how to fetch and iterate the Response object's headers.</p>
 <pre><code>&lt;?php
-$headerValue = $app['response']-&gt;getHeader('X-Api-Key');
+// Iterate response headers
+foreach ($response-&gt;getHeaders() as $name =&gt; $values) {
+    echo $name, PHP_EOL;
+    foreach ($values as $value) {
+        echo $value, PHP_EOL;
+    }
+}
 </code></pre>
 <h3 id="detect-header">Detect Header</h3>
-<p>You can detect the presence of a HTTP response header with the Response object's <code>hasHeader($key)</code> method.</p>
+<p>You can detect the presence of an HTTP header with the Response object's <code>hasHeader($name)</code> method. This method returns <code>true</code> or <code>false</code>.</p>
 <pre><code>&lt;?php
-if ($app['response']-&gt;hasHeader('Vary') === true) {
+if ($response-&gt;hasHeader('Allow') === true) {
     // Do something
 }
 </code></pre>
-<h3 id="set-multiple-headers">Set Multiple Headers</h3>
-<p>You can set multiple HTTP response headers with the Response object's <code>setHeaders()</code> method. This method accepts an associative array of header names and values. These headers <em>replace</em> existing HTTP response headers with the same names.</p>
+<h3 id="get-header">Get Header</h3>
+<p>You can fetch a single HTTP response header with the Response object's <code>getHeader($name)</code> method.</p>
 <pre><code>&lt;?php
-$app['response']-&gt;setHeaders([
-    'X-Api-Remaining' =&gt; 300,
-    'X-Api-Used' =&gt; 100
-]);
+$headerValue = $response-&gt;getHeader('Allow');
 </code></pre>
-<h3 id="set-one-header">Set One Header</h3>
-<p>You can set one HTTP response header with the Response object's <code>setHeader()</code> method.</p>
-<pre><code>&lt;?php
-$app['response']-&gt;setHeader('Content-type', 'application/json');
+<p>This returns a string value. The returned string is a comma-concatenated string containing all values associated with the header name. For example, <code>$response-&gt;getHeader('Allow')</code> may return this string value:</p>
+<pre><code>"GET,HEAD,DELETE"
 </code></pre>
-<h3 id="add-multiple-headers">Add Multiple Headers</h3>
-<p>You can add multiple HTTP response headers with the Response object's <code>addHeaders()</code> method. This method accepts an associative array of header names and values. This method <em>appends</em> data to existing HTTP response headers with the same names. A Response object header with multiple values serializes into a comma-delimited header value in the HTTP response.</p>
+<p>Use the Response object's <code>getHeaderLines($name)</code> method to return the single-dimensional array associated with a given header name. </p>
 <pre><code>&lt;?php
-$app['response']-&gt;addHeaders([
-    'X-Api-Remaining' =&gt; 300,
-    'X-Api-Used' =&gt; 100
-]);
+$headerValue = $response-&gt;getHeaderLines('Allow');
 </code></pre>
-<h3 id="add-one-header">Add One Header</h3>
-<p>You can add one HTTP response header with the Response object's <code>addHeader()</code> method. This method <em>appends</em> data to an existing HTTP response header with the same name. A Response object header with multiple values serializes into a comma-delimited header value in the HTTP response.</p>
+<p>This code may return this single-dimensional array:</p>
+<pre><code>[
+    'GET',
+    'HEAD',
+    'DELETE'
+]
+</code></pre>
+<h3 id="set-header">Set Header</h3>
+<p>You can set a new header value with the Response object's <code>withHeader($name, $value)</code> method. Remember, the Response object is immutable. This method returns a new <em>copy</em> of the Response object that has the new header value. <strong>This method is destructive</strong>, and it <em>replaces</em> any existing header values that are associated with the same header name.</p>
 <pre><code>&lt;?php
-$app['response']-&gt;addHeader('X-Api-Token', '1');
+$newResponse = $oldResponse-&gt;withHeader(
+    'Content-type',
+    'application/json'
+);
+</code></pre>
+<h3 id="add-header">Add Header</h3>
+<p>You can add a new header value with the Response object's <code>withAddedHeader($name, $value)</code> method. Remember, the Response object is immutable. This method returns a new <em>copy</em> of the Response object that has the added header value. <strong>This method is non-destructive</strong>, and it <em>appends</em> the new header value to any existing header values that are `associated with the same header name.</p>
+<pre><code>&lt;?php
+$newResponse = $oldResponse-&gt;withAddedHeader(
+    'Content-type',
+    'application/json'
+);
 </code></pre>
 <h3 id="remove-header">Remove Header</h3>
-<p>You can remove a header from the HTTP response with the Response object's <code>removeHeader($key)</code> method.</p>
+<p>You can remove a header with the Response object's <code>withoutHeader($name)</code> method. Remember, the Response object is immutable. This method returns a new <em>copy</em> of the Response object that does not have the specified header.</p>
 <pre><code>&lt;?php
-$app['response']-&gt;removeHeader('X-Api-Token');
+$newResponse = $oldResponse-&gt;withoutHeader('Allow');
 </code></pre>
 <h2 id="response-cookies">Response Cookies</h2>
 <p>The Response object manages a collection of cookies to be returned with the HTTP response.</p>
