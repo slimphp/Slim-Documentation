@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Installation - Slim Framework</title>
+  <title>Value Objects - Slim Framework</title>
   
 
   
@@ -44,21 +44,8 @@
         
         <span>Get Started</span>
             
-                <li class="toctree-l1 current">
-                    <a class="current" href=".">Installation</a>
-                    
-                        <ul>
-                        
-                            <li class="toctree-l2"><a href="#system-requirements">System Requirements</a></li>
-                            
-                        
-                            <li class="toctree-l2"><a href="#install-with-composer">Install with Composer</a></li>
-                            
-                        
-                            <li class="toctree-l2"><a href="#install-manually">Install Manually</a></li>
-                            
-                        
-                        </ul>
+                <li class="toctree-l1 ">
+                    <a class="" href="../installation">Installation</a>
                     
                 </li>
             
@@ -73,8 +60,15 @@
                     
                 </li>
             
-                <li class="toctree-l1 ">
-                    <a class="" href="../value-objects">Value Objects</a>
+                <li class="toctree-l1 current">
+                    <a class="current" href=".">Value Objects</a>
+                    
+                        <ul>
+                        
+                            <li class="toctree-l2"><a href="#value-objects">Value Objects</a></li>
+                            
+                        
+                        </ul>
                     
                 </li>
             
@@ -212,7 +206,7 @@
           <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../..">Docs</a> &raquo;</li>
-    <li>Installation</li>
+    <li>Value Objects</li>
       <li class="wy-breadcrumbs-aside">
         
       </li>
@@ -221,25 +215,11 @@
 </div>
           <div role="main">
             <div class="section">
-              <h1 id="system-requirements">System Requirements</h1>
-<ul>
-<li>Web server with URL rewriting</li>
-<li>PHP 5.4.0 or newer</li>
-</ul>
-<h1 id="install-with-composer">Install with Composer</h1>
-<p>The preferred installation method is <a href="https://getcomposer.org/">Composer</a>. Navigate into your project directory and execute the following bash command. This command downloads the Slim Framework into your project's <code>vendor/</code> directory and creates the appropriate autoloader.</p>
-<pre><code>composer require slim/slim
-</code></pre>
-<p>Next, require the Composer autoloader into your PHP script.</p>
-<pre><code>&lt;?php
-require 'vendor/autoload.php';
-</code></pre>
-<h1 id="install-manually">Install Manually</h1>
-<p>You can install the Slim Framework without Composer. Download the Slim Framework files into your project directory. Next, require the <code>Slim/Autoloader.php</code> file into your PHP script and invoke its static <code>register()</code> method.</p>
-<pre><code>&lt;?php
-require 'Slim/Autoloader.php';
-\Slim\Autoloader::register();
-</code></pre>
+              <h1 id="value-objects">Value Objects</h1>
+<p>Each Slim application's Request and Response objects are <a href="http://en.wikipedia.org/wiki/Value_object"><em>immutable value objects</em></a>. They can be "changed" only by requesting a cloned version that has updated property values.</p>
+<p>Each Slim application starts with an initial Request and Response object pair. These objects are passed into each application middleware layer, and each middleware layer can use each object's <code>with*()</code> methods to request a copy of the object with updated properties. You could, for example, invoke the Response object's <code>withHeader('Content-Type', 'application/json')</code> method to return a new Response instance that has the updated content type header.</p>
+<p>Each middleware is responsible for sending a Request and Response object into the next interior middleware, and each middleware should return the potentially new Response object returned by that same interior middleware. As the Request and Response objects descend into the concentric middleware layers, they will arrive at the Slim application itself. Each application route has a callable, and its callable will receive the most current Request and Response objects as arguments. The route callable can do what is necessary with the Request and Response arguments, but it ultimately must return an appropriate Response object; the returned Response object outwardly traverses the surrounding middleware layers until the final Response object manifestation is returned to the HTTP client.</p>
+<p>The point is this. Each middleware layer and route callable receives the latest incarnations of the Request and Respone objects, and they can return an updated version of the Response object until the the ultimate Response object is serialized into an HTTP response that is delivered to the HTTP client.</p>
 
             </div>
           </div>
@@ -247,10 +227,10 @@ require 'Slim/Autoloader.php';
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../../architecture" class="btn btn-neutral float-right" title="Architecture"/>Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../../lifecycle" class="btn btn-neutral float-right" title="Lifecycle"/>Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../.." class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../architecture" class="btn btn-neutral" title="Architecture"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -276,8 +256,8 @@ require 'Slim/Autoloader.php';
 <div class="rst-versions" role="note" style="cursor: pointer">
     <span class="rst-current-version" data-toggle="rst-current-version">
         
-      <span><a href="../.." style="color: #fcfcfc;">&laquo; Previous</a></span>
-      <span style="margin-left: 15px"><a href="../../architecture" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../../architecture" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      <span style="margin-left: 15px"><a href="../../lifecycle" style="color: #fcfcfc">Next &raquo;</a></span>
     </span>
 </div>
 </body>
