@@ -181,94 +181,27 @@ Technically, this method _sets_ a new cookie whose value is empty and whose expi
 
 ## Response Body
 
-The Response object's body is a PHP stream resource. _It is not a string_. By default, the Response object body is a stream readable from and writable to `php://temp`. However, you can substitute the default stream with any valid PHP stream resource. This lets you send a very large HTTP response body that may not otherwise fit into available memory. The Response object provides these methods to inspect and manipulate its body property.
+The Response object's body is a streamable object that implements the [\Psr\Http\Message\StreamableInterface](https://github.com/php-fig/fig-standards/blob/master/proposed/http-message.md#34-psrhttpmessagestreamableinterface) interface. This makes it possible to deliver content that may not otherwise fit into available system memory. By default, the Response object body opens a readable, writable, and seekable handle to `php://temp`. However, you can point the Response object's body to _any_ valid PHP resource handle. Think about that for a second. You can point the Response object's body to a local filesystem file, to a remote file hosted on Amazon S3, to a remote API, or to the output of a local system process.
 
-### Append Body
+### Get Body
 
-You can append text to the end of the current HTTP response body with the Response object's `write()` method.
-
-    <?php
-    $app['response']->write('Content goes here');
-
-### Fetch Body
-
-You can fetch the current HTTP response body with the Response object's `getBody()` method. This returns a reference to the PHP stream resource.
+You can get the Response object body with the `getBody()` method.
 
     <?php
-    $bodyStream = $app['response']->getBody();
+    $body = $response->getBody();
+
+### Write Body
+
+You can write to the Response object's body with the Response object's `write()` method. This method is a simple proxy to the Body object's `write()` method is available purey for convenience.
+
+    <?php
+    $response->write('New content');
 
 ### Set Body
 
-You can replace the current HTTP response body with a new PHP stream resource using the Response object's `setBody()` method.
+You can _replace_ the Response object's body with the Response object's `widthBody()` method. Remember, the Response object is immutable. This method returns a new _copy_ of the Response object that uses the new Body. This method's argument MUST be an instance of `\Psr\Http\Message\StreamableInterface`.
 
     <?php
-    $newBody = fopen('/path/to/large/file.txt', 'rb');
-    $app['response']->setBody($newBody);
-
-<div class="wy-alert wy-alert-info">
-This method <em>does not</em> initiate a file download. Instead, this method only specifies a new <em>origin</em> of data that will become the HTTP response body. We'll discuss file downloads momentarily.
-</div>
-
-## Response Helpers
-
-Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea, sed? Sit aut est ipsam, accusamus molestias impedit assumenda veritatis, alias temporibus tempore unde quaerat eligendi odio nulla consequuntur sequi cumque.
-
-### Write JSON
-
-Slim provides first-class support for JSON data. You can write JSON data directly to the response object with the Response object's `writeJson()` method. This method accepts one argument, and the argument can be an array, a JSON string, or an object that implements a `toJson()` or `asJson()` method.
-The Response object's `writeJson()` method automatically sets the appropriate `Content-Type` and `Content-Length` response headers.
-
-    <?php
-    // Write JSON from array
-    $data = [
-        'records' => [
-            (object)[
-                'id' => '1',
-                'name' => 'John'
-            ],
-            (object)[
-                'id' => '2',
-                'name' => 'Sally'
-            ],
-            (object)[
-                'id' => '3',
-                'name' => 'Sue'
-            ]
-        ]
-    ];
-    $app['response']->writeJson($data);
-
-    // Write JSON from string
-    $data = '{"records": [{ "id": "1", "name": "John" }]}';
-    $app['response']->writeJson($data);
-
-### Write XML
-
-Slim provides first-class support for XML data. You can write XML data directly to the response object with the Response object's `writeXml()` method. This method accepts one argument, and the argument can be an array, a XML string, or an object that implements a `toXml()` or `asXml()` method.
-The Response object's `writeXml()` method automatically sets the appropriate `Content-Type` and `Content-Length` response headers.
-
-    <?php
-    // Write XML from array
-    $data = [
-        'records' => [
-            'john' => (object)[
-                'id' => '1',
-                'name' => 'John'
-            ],
-            'sally' => (object)[
-                'id' => '2',
-                'name' => 'Sally'
-            ],
-            'sue' => (object)[
-                'id' => '3',
-                'name' => 'Sue'
-            ]
-        ]
-    ];
-    $app['response']->writeXml($data);
-
-    // Write XML from string
-    $data = '<records><john id="1" name="john"/></records>';
-    $app['response']->writeXml($data);
-
-### Initiate File Download
+    $newResponse = $oldResponse->withBody(
+        new Body(fopen('s3://bucket/key', 'r'));
+    );
