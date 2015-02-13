@@ -374,12 +374,12 @@ $newResponse = $oldResponse-&gt;withoutCookie('user');
 $body = $response-&gt;getBody();
 </code></pre>
 <h3 id="write-body">Write Body</h3>
-<p>You can write to the Response object's body with the Response object's <code>write()</code> method. This method is a simple proxy to the Body object's <code>write()</code> method is available purey for convenience.</p>
+<p>You can write to the Response object's body with the Response object's <code>write()</code> method. This method is a simple proxy to the Body object's <code>write()</code> method and is available as a convenience.</p>
 <pre><code>&lt;?php
 $response-&gt;write('New content');
 </code></pre>
 <h3 id="set-body">Set Body</h3>
-<p>You can <em>replace</em> the Response object's body with the Response object's <code>widthBody()</code> method. Remember, the Response object is immutable. This method returns a new <em>copy</em> of the Response object that uses the new Body. This method's argument MUST be an instance of <code>\Psr\Http\Message\StreamableInterface</code>.</p>
+<p>You can <em>replace</em> the Response object's body with the Response object's <code>withBody()</code> method. Remember, the Response object is immutable. This method returns a new <em>copy</em> of the Response object that uses the new Body. This method's argument MUST be an instance of <code>\Psr\Http\Message\StreamableInterface</code>.</p>
 <pre><code>&lt;?php
 $newResponse = $oldResponse-&gt;withBody(
     new Body(fopen('s3://bucket/key', 'r'));
