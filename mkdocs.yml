@@ -3,6 +3,7 @@ pages:
     - [index.md, Home]
     - [start/installation.md, Get Started, Installation]
     - [concepts/architecture.md, Concepts, Architecture]
+    - [concepts/middleware.md, Concepts, Middleware]
     - [concepts/value-objects.md, Concepts, Value Objects]
     - [concepts/life-cycle.md, Concepts, Lifecycle]
     - [objects/environment.md, Objects, Environment]
