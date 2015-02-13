@@ -2,8 +2,9 @@ site_name: Slim Framework
 pages:
     - [index.md, Home]
     - [start/installation.md, Get Started, Installation]
-    - [architecture.md, Get Started, Architecture]
-    - [lifecycle.md, Get Started, Lifecycle]
+    - [architecture.md, Concepts, Architecture]
+    - [start/value-objects.md, Concepts, Value Objects]
+    - [lifecycle.md, Concepts, Lifecycle]
     - [objects/environment.md, Objects, Environment]
     - [objects/request.md, Objects, Request]
     - [objects/response.md, Objects, Response]
