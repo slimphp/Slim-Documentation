@@ -192,14 +192,14 @@ You can get the Response object body with the `getBody()` method.
 
 ### Write Body
 
-You can write to the Response object's body with the Response object's `write()` method. This method is a simple proxy to the Body object's `write()` method is available purey for convenience.
+You can write to the Response object's body with the Response object's `write()` method. This method is a simple proxy to the Body object's `write()` method and is available as a convenience.
 
     <?php
     $response->write('New content');
 
 ### Set Body
 
-You can _replace_ the Response object's body with the Response object's `widthBody()` method. Remember, the Response object is immutable. This method returns a new _copy_ of the Response object that uses the new Body. This method's argument MUST be an instance of `\Psr\Http\Message\StreamableInterface`.
+You can _replace_ the Response object's body with the Response object's `withBody()` method. Remember, the Response object is immutable. This method returns a new _copy_ of the Response object that uses the new Body. This method's argument MUST be an instance of `\Psr\Http\Message\StreamableInterface`.
 
     <?php
     $newResponse = $oldResponse->withBody(

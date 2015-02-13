@@ -106,8 +106,6 @@
                             
                                 <li><a class="toctree-l3" href="#response-body">Response Body</a></li>
                             
-                                <li><a class="toctree-l3" href="#response-helpers">Response Helpers</a></li>
-                            
                         
                         </ul>
                     
@@ -369,84 +367,24 @@ $newResponse = $oldResponse-&gt;withoutCookie('user');
 </code></pre>
 <p>Technically, this method <em>sets</em> a new cookie whose value is empty and whose expiration date is in the past. This prompts the HTTP client to invalidate and destroy its local copy of the cookie.</p>
 <h2 id="response-body">Response Body</h2>
-<p>The Response object's body is a PHP stream resource. <em>It is not a string</em>. By default, the Response object body is a stream readable from and writable to <code>php://temp</code>. However, you can substitute the default stream with any valid PHP stream resource. This lets you send a very large HTTP response body that may not otherwise fit into available memory. The Response object provides these methods to inspect and manipulate its body property.</p>
-<h3 id="append-body">Append Body</h3>
-<p>You can append text to the end of the current HTTP response body with the Response object's <code>write()</code> method.</p>
+<p>The Response object's body is a streamable object that implements the <a href="https://github.com/php-fig/fig-standards/blob/master/proposed/http-message.md#34-psrhttpmessagestreamableinterface">\Psr\Http\Message\StreamableInterface</a> interface. This makes it possible to deliver content that may not otherwise fit into available system memory. By default, the Response object body opens a readable, writable, and seekable handle to <code>php://temp</code>. However, you can point the Response object's body to <em>any</em> valid PHP resource handle. Think about that for a second. You can point the Response object's body to a local filesystem file, to a remote file hosted on Amazon S3, to a remote API, or to the output of a local system process.</p>
+<h3 id="get-body">Get Body</h3>
+<p>You can get the Response object body with the <code>getBody()</code> method.</p>
 <pre><code>&lt;?php
-$app['response']-&gt;write('Content goes here');
+$body = $response-&gt;getBody();
 </code></pre>
-<h3 id="fetch-body">Fetch Body</h3>
-<p>You can fetch the current HTTP response body with the Response object's <code>getBody()</code> method. This returns a reference to the PHP stream resource.</p>
+<h3 id="write-body">Write Body</h3>
+<p>You can write to the Response object's body with the Response object's <code>write()</code> method. This method is a simple proxy to the Body object's <code>write()</code> method is available purey for convenience.</p>
 <pre><code>&lt;?php
-$bodyStream = $app['response']-&gt;getBody();
+$response-&gt;write('New content');
 </code></pre>
 <h3 id="set-body">Set Body</h3>
-<p>You can replace the current HTTP response body with a new PHP stream resource using the Response object's <code>setBody()</code> method.</p>
+<p>You can <em>replace</em> the Response object's body with the Response object's <code>widthBody()</code> method. Remember, the Response object is immutable. This method returns a new <em>copy</em> of the Response object that uses the new Body. This method's argument MUST be an instance of <code>\Psr\Http\Message\StreamableInterface</code>.</p>
 <pre><code>&lt;?php
-$newBody = fopen('/path/to/large/file.txt', 'rb');
-$app['response']-&gt;setBody($newBody);
+$newResponse = $oldResponse-&gt;withBody(
+    new Body(fopen('s3://bucket/key', 'r'));
+);
 </code></pre>
-<div class="wy-alert wy-alert-info">
-This method <em>does not</em> initiate a file download. Instead, this method only specifies a new <em>origin</em> of data that will become the HTTP response body. We'll discuss file downloads momentarily.
-</div>
-
-<h2 id="response-helpers">Response Helpers</h2>
-<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea, sed? Sit aut est ipsam, accusamus molestias impedit assumenda veritatis, alias temporibus tempore unde quaerat eligendi odio nulla consequuntur sequi cumque.</p>
-<h3 id="write-json">Write JSON</h3>
-<p>Slim provides first-class support for JSON data. You can write JSON data directly to the response object with the Response object's <code>writeJson()</code> method. This method accepts one argument, and the argument can be an array, a JSON string, or an object that implements a <code>toJson()</code> or <code>asJson()</code> method.
-The Response object's <code>writeJson()</code> method automatically sets the appropriate <code>Content-Type</code> and <code>Content-Length</code> response headers.</p>
-<pre><code>&lt;?php
-// Write JSON from array
-$data = [
-    'records' =&gt; [
-        (object)[
-            'id' =&gt; '1',
-            'name' =&gt; 'John'
-        ],
-        (object)[
-            'id' =&gt; '2',
-            'name' =&gt; 'Sally'
-        ],
-        (object)[
-            'id' =&gt; '3',
-            'name' =&gt; 'Sue'
-        ]
-    ]
-];
-$app['response']-&gt;writeJson($data);
-
-// Write JSON from string
-$data = '{"records": [{ "id": "1", "name": "John" }]}';
-$app['response']-&gt;writeJson($data);
-</code></pre>
-<h3 id="write-xml">Write XML</h3>
-<p>Slim provides first-class support for XML data. You can write XML data directly to the response object with the Response object's <code>writeXml()</code> method. This method accepts one argument, and the argument can be an array, a XML string, or an object that implements a <code>toXml()</code> or <code>asXml()</code> method.
-The Response object's <code>writeXml()</code> method automatically sets the appropriate <code>Content-Type</code> and <code>Content-Length</code> response headers.</p>
-<pre><code>&lt;?php
-// Write XML from array
-$data = [
-    'records' =&gt; [
-        'john' =&gt; (object)[
-            'id' =&gt; '1',
-            'name' =&gt; 'John'
-        ],
-        'sally' =&gt; (object)[
-            'id' =&gt; '2',
-            'name' =&gt; 'Sally'
-        ],
-        'sue' =&gt; (object)[
-            'id' =&gt; '3',
-            'name' =&gt; 'Sue'
-        ]
-    ]
-];
-$app['response']-&gt;writeXml($data);
-
-// Write XML from string
-$data = '&lt;records&gt;&lt;john id="1" name="john"/&gt;&lt;/records&gt;';
-$app['response']-&gt;writeXml($data);
-</code></pre>
-<h3 id="initiate-file-download">Initiate File Download</h3>
 
             </div>
           </div>
