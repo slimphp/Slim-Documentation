@@ -237,7 +237,7 @@
 <p>When you run the Slim application, the Request and Response objects traverse the middleware structure from the outside in. They first enter the outer-most middleware, then the next outer-most middleware, (and so on), until they ultimately arrive at the Slim application itself. After the Slim application dispatches the appropriate route, the resultant Response object exits the Slim application and traverse the middleware structure from the inside out. Ultimately, a final Response object exits the outer-most middleware, is serialized into a raw HTTP response, and is returned to the HTTP client.</p>
 <p>Each middleware <em>may</em> invoke its next interior middlware and pass it the current Request and Response objects as arguments. Each middlware layer MUST return a Response object.</p>
 <p>Here's a diagram that hopefully illustrates the middleware process flow:</p>
-<p><img alt="Middleware flow" src="../../../images/middleware.png" title="Middleware" /></p>
+<p><img alt="Middleware flow" src="../..//images/middleware.png" title="Middleware" /></p>
 <h1 id="how-do-i-write-middleware">How do I write middleware?</h1>
 <p>Middleware is any <em>callable</em> that receives three arguments: a Request object, a Response object, and a <em>next</em> middleware. The middleware MUST return a Response object. This example middleware is a Closure.</p>
 <pre><code>&lt;?php
