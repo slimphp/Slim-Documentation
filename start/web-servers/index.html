@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Branching Strategy - Slim Framework</title>
+  <title>Web Servers - Slim Framework</title>
   
 
   
@@ -45,12 +45,31 @@
         <span>Get Started</span>
             
                 <li class="toctree-l1 ">
-                    <a class="" href="../../start/installation">Installation</a>
+                    <a class="" href="../installation">Installation</a>
                     
                 </li>
             
-                <li class="toctree-l1 ">
-                    <a class="" href="../../start/web-servers">Web Servers</a>
+                <li class="toctree-l1 current">
+                    <a class="current" href=".">Web Servers</a>
+                    
+                        <ul>
+                        
+                            <li class="toctree-l2"><a href="#apache-configuration">Apache configuration</a></li>
+                            
+                        
+                            <li class="toctree-l2"><a href="#nginx-configuration">Nginx configuration</a></li>
+                            
+                        
+                            <li class="toctree-l2"><a href="#hiphop-virtual-machine">HipHop Virtual Machine</a></li>
+                            
+                        
+                            <li class="toctree-l2"><a href="#iis">IIS</a></li>
+                            
+                        
+                            <li class="toctree-l2"><a href="#lighttpd">lighttpd</a></li>
+                            
+                        
+                        </ul>
                     
                 </li>
             
@@ -177,19 +196,12 @@
         <span>Contributors</span>
             
                 <li class="toctree-l1 ">
-                    <a class="" href="../guidelines">Guidelines</a>
+                    <a class="" href="../../contributors/guidelines">Guidelines</a>
                     
                 </li>
             
-                <li class="toctree-l1 current">
-                    <a class="current" href=".">Branching Strategy</a>
-                    
-                        <ul>
-                        
-                            <li class="toctree-l2"><a href="#branching-strategy">Branching Strategy</a></li>
-                            
-                        
-                        </ul>
+                <li class="toctree-l1 ">
+                    <a class="" href="../../contributors/strategy">Branching Strategy</a>
                     
                 </li>
             
@@ -216,7 +228,7 @@
           <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../..">Docs</a> &raquo;</li>
-    <li>Branching Strategy</li>
+    <li>Web Servers</li>
       <li class="wy-breadcrumbs-aside">
         
       </li>
@@ -225,8 +237,71 @@
 </div>
           <div role="main">
             <div class="section">
-              <h1 id="branching-strategy">Branching Strategy</h1>
-<p>The Slim Framework uses a simple branching strategy. There is one <code>master</code> branch, and the <code>master</code> branch <code>HEAD</code> reference points to the latest unstable code. Each stable release is denoted with a numeric tag (e.g., <code>3.0.0</code>).</p>
+              <h1 id="apache-configuration">Apache configuration</h1>
+<p>Ensure the <code>.htaccess</code> and <code>index.php</code> files are in the same public-accessible directory. The <code>.htaccess</code> file
+should contain this code:</p>
+<pre><code>RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]
+</code></pre>
+<p>Additionally, make sure your virtual host is configured with the <code>AllowOverride</code> option so that the <code>.htaccess</code> rewrite rules can be used:</p>
+<pre><code>AllowOverride All
+</code></pre>
+<h1 id="nginx-configuration">Nginx configuration</h1>
+<p>The nginx configuration file should contain this code (along with other settings you may need) in your <code>location</code> block:</p>
+<pre><code>try_files $uri $uri/ /index.php?$args;
+</code></pre>
+<p>This assumes that Slim's <code>index.php</code> is in the root folder of your project (www root).</p>
+<h1 id="hiphop-virtual-machine">HipHop Virtual Machine</h1>
+<p>Your HipHop Virtual Machine configuration file should contain this code (along with other settings you may need). Be sure you change the <code>ServerRoot</code> setting to point to your Slim app's document root directory.</p>
+<pre><code>Server {
+    SourceRoot = /path/to/public/directory
+}
+
+ServerVariables {
+    SCRIPT_NAME = /index.php
+}
+
+VirtualHost {
+    * {
+        Pattern = .*
+        RewriteRules {
+                * {
+                        pattern = ^(.*)$
+                        to = index.php/$1
+                        qsa = true
+                }
+        }
+    }
+}
+</code></pre>
+<h1 id="iis">IIS</h1>
+<p>Ensure the <code>Web.config</code> and <code>index.php</code> files are in the same public-accessible directory. The <code>Web.config</code> file should contain this code:</p>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;configuration&gt;
+    &lt;system.webServer&gt;
+        &lt;rewrite&gt;
+            &lt;rules&gt;
+                &lt;rule name=&quot;slim&quot; patternSyntax=&quot;Wildcard&quot;&gt;
+                    &lt;match url=&quot;*&quot; /&gt;
+                    &lt;conditions&gt;
+                        &lt;add input=&quot;{REQUEST_FILENAME}&quot; matchType=&quot;IsFile&quot; negate=&quot;true&quot; /&gt;
+                        &lt;add input=&quot;{REQUEST_FILENAME}&quot; matchType=&quot;IsDirectory&quot; negate=&quot;true&quot; /&gt;
+                    &lt;/conditions&gt;
+                    &lt;action type=&quot;Rewrite&quot; url=&quot;index.php&quot; /&gt;
+                &lt;/rule&gt;
+            &lt;/rules&gt;
+        &lt;/rewrite&gt;
+    &lt;/system.webServer&gt;
+&lt;/configuration&gt;
+</code></pre>
+
+<h1 id="lighttpd">lighttpd</h1>
+<p>Your lighttpd configuration file should contain this code (along with other settings you may need). This code requires lighttpd &gt;= 1.4.24.</p>
+<pre><code>url.rewrite-if-not-file = ("(.*)" =&gt; "/index.php/$0")
+</code></pre>
+<p>This assumes that Slim's <code>index.php</code> is in the root folder of your project (www root).</p>
 
             </div>
           </div>
@@ -234,8 +309,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
+        <a href="../../concepts/architecture" class="btn btn-neutral float-right" title="Architecture"/>Next <span class="icon icon-circle-arrow-right"></span></a>
       
-        <a href="../guidelines" class="btn btn-neutral" title="Guidelines"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+        <a href="../installation" class="btn btn-neutral" title="Installation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -261,8 +338,8 @@
 <div class="rst-versions" role="note" style="cursor: pointer">
     <span class="rst-current-version" data-toggle="rst-current-version">
         
-      <span><a href="../guidelines" style="color: #fcfcfc;">&laquo; Previous</a></span>
-      <span style="margin-left: 15px"><a href="" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../installation" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      <span style="margin-left: 15px"><a href="../../concepts/architecture" style="color: #fcfcfc">Next &raquo;</a></span>
     </span>
 </div>
 </body>
