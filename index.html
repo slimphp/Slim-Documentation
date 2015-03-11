@@ -214,41 +214,45 @@
           <div role="main">
             <div class="section">
               <h1 id="slim-framework">Slim Framework</h1>
-<p>Slim is a micro framework that helps you quickly write simple yet powerful PHP web applications and APIs. It dispatches HTTP requests to the appropriate callbacks for a specific HTTP URI and method. Slim also supports concentric middleware layers around your Slim application.</p>
-<h2 id="usage">Usage</h2>
-<pre><code>&lt;?php
-$app = new \Slim\App();
-$app-&gt;get('/hello/:name', function ($name) {
-    echo "Hello, $name";
-});
-$app-&gt;run();
-</code></pre>
-<h2 id="support">Support</h2>
+<p><a href="https://travis-ci.org/slimphp/Slim"><img alt="Build Status" src="https://travis-ci.org/slimphp/Slim.svg?branch=develop" /></a></p>
+<p>Slim is a PHP micro framework that helps you quickly write simple yet powerful web applications and APIs. Learn more at these links:</p>
 <ul>
 <li><a href="http://www.slimframework.com">Website</a></li>
+<li><a href="http://docs.slimframework.com">Documentation</a></li>
 <li><a href="http://help.slimframework.com">Support Forum</a></li>
 <li><a href="https://twitter.com/slimphp">Twitter</a></li>
 </ul>
-<h2 id="author">Author</h2>
-<p><a href="https://joshlockhart.com">Josh Lockhart</a></p>
+<h2 id="install">Install</h2>
+<p>Via <a href="https://getcomposer.org/">Composer</a></p>
+<pre><code class="bash">$ composer require slim/slim
+</code></pre>
+
+<p>Requires PHP 5.4.0 or newer.</p>
+<h2 id="usage">Usage</h2>
+<pre><code class="php">$app = new \Slim\App();
+$app-&gt;get('/hello/{name}', function ($request, $response, $args) {
+    echo &quot;Hello, &quot; . $args['name'];
+});
+$app-&gt;run();
+</code></pre>
+
+<h2 id="testing">Testing</h2>
+<pre><code class="bash">phpunit
+</code></pre>
+
+<h2 id="contributing">Contributing</h2>
+<p>Please see <a href="https://github.com/slimphp/Slim/blob/master/CONTRIBUTING.md">CONTRIBUTING</a> for details.</p>
+<h2 id="security">Security</h2>
+<p>If you discover any security related issues, please email security@slimframework.com instead of using the issue tracker.</p>
+<h2 id="credits">Credits</h2>
+<ul>
+<li><a href="https://github.com/codeguy">Josh Lockhart</a></li>
+<li><a href="https://github.com/silentworks">Andrew Smith</a></li>
+<li><a href="https://github.com/gmanricks">Gabriel Manricks</a> </li>
+<li><a href="https://github.com/slimphp/Slim/graphs/contributors">All Contributors</a></li>
+</ul>
 <h2 id="license">License</h2>
-<p>The MIT License (MIT)</p>
-<p>Copyright (c) 2015 Josh Lockhart</p>
-<p>Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:</p>
-<p>The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.</p>
-<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.</p>
+<p>The MIT License (MIT). Please see <a href="https://github.com/slimphp/Slim/blob/master/LICENSE.md">License File</a> for more information.</p>
 
             </div>
           </div>
