@@ -253,8 +253,11 @@ demonstrates this scenario inside a Slim application route:</p>
 
 <h1 id="templates">Templates</h1>
 <p>The Slim Framework does not provide a built-in templating system.
-Instead, you may use the view-related tools most appropriate for your
-Slim application. Some great third-party tools are:</p>
+Instead, you may generate output using the view-related tools most
+appropriate for your Slim application. Whichever tools you choose,
+they are still bound by the rules above: content must be written
+directly to the Response object or captured into the current output buffer.</p>
+<p>Some great third-party tools for generating templated output include:</p>
 <ul>
 <li><a href="http://platesphp.com/">league/plates</a></li>
 <li><a href="https://github.com/slimphp/Twig-View">slim/twig-view</a></li>
