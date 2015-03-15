@@ -150,6 +150,13 @@
                     
                         <ul>
                         
+                            <li class="toctree-l2"><a href="#overview">Overview</a></li>
+                            
+                                <li><a class="toctree-l3" href="#default-not-allowed-handler">Default Not Allowed handler</a></li>
+                            
+                                <li><a class="toctree-l3" href="#custom-not-allowed-handler">Custom Not Allowed handler</a></li>
+                            
+                        
                         </ul>
                     
                 </li>
@@ -197,7 +204,30 @@
 </div>
           <div role="main">
             <div class="section">
-              
+              <h1 id="overview">Overview</h1>
+<p>If your Slim Framework application has a route that matches the current HTTP request URI <strong>but NOT the HTTP request method</strong>, the application invokes its Not Allowed handler and returns a <code>HTTP/1.1 405 Not Allowed</code> response to the HTTP client.</p>
+<h2 id="default-not-allowed-handler">Default Not Allowed handler</h2>
+<p>Each Slim Framework application has a default Not Allowed handler. This handler sets the Response status to <code>405</code>, it sets the content type to <code>text/html</code>, it adds a <code>Allowed:</code> HTTP header with a comma-delimited list of allowed HTTP methods, and it writes a simple explanation to the Response body.</p>
+<h2 id="custom-not-allowed-handler">Custom Not Allowed handler</h2>
+<p>A Slim Framework application's Not Allowed handler is a Pimple service. You can substitute your own Not Allowed handler by defining a custom Pimple factory method with the application container.</p>
+<pre><code class="php">$app['notAllowedHandler'] = function ($c) {
+    return function ($request, $response, $methods) use ($c) {
+        return $c['response']
+            -&gt;withStatus(405)
+            -&gt;withHeader('Allow', implode(', ', $methods))
+            -&gt;withHeader('Content-type', 'text/html')
+            -&gt;write('Method must be one of: ' . implode(', ', $methods));
+};
+</code></pre>
+
+<p>In this example, we define a new <code>notAllowedHandler</code> factory that returns a callable. The returned callable accepts three arguments:</p>
+<ol>
+<li>A <code>\Psr\Http\Message\RequestInterface</code> instance</li>
+<li>A <code>\Psr\Http\Message\ResponseInterface</code> instance</li>
+<li>A numeric array of allowed HTTP method names</li>
+</ol>
+<p>The callable <strong>MUST</strong> return an appropriate <code>\Psr\Http\Message\ResponseInterface</code> instance.</p>
+
             </div>
           </div>
           <footer>

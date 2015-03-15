@@ -145,6 +145,13 @@
                     
                         <ul>
                         
+                            <li class="toctree-l2"><a href="#overview">Overview</a></li>
+                            
+                                <li><a class="toctree-l3" href="#default-not-found-handler">Default Not Found handler</a></li>
+                            
+                                <li><a class="toctree-l3" href="#custom-not-found-handler">Custom Not Found handler</a></li>
+                            
+                        
                         </ul>
                     
                 </li>
@@ -197,7 +204,28 @@
 </div>
           <div role="main">
             <div class="section">
-              
+              <h1 id="overview">Overview</h1>
+<p>If your Slim Framework application does not have a route that matches the current HTTP request URI, the application invokes its Not Found handler and returns a <code>HTTP/1.1 404 Not Found</code> response to the HTTP client.</p>
+<h2 id="default-not-found-handler">Default Not Found handler</h2>
+<p>Each Slim Framework application has a default Not Found handler. This handler sets the Response status to <code>404</code>, it sets the content type to <code>text/html</code>, and it writes a simple explanation to the Response body.</p>
+<h2 id="custom-not-found-handler">Custom Not Found handler</h2>
+<p>A Slim Framework application's Not Found handler is a Pimple service. You can substitute your own Not Found handler by defining a custom Pimple factory method with the application container.</p>
+<pre><code class="php">$app['notFoundHandler'] = function ($c) {
+    return function ($request, $response) use ($c) {
+        return $c['response']-&gt;withStatus(404)
+                             -&gt;withHeader('Content-Type', 'text/html')
+                             -&gt;write('Page not found');
+    };
+};
+</code></pre>
+
+<p>In this example, we define a new <code>notFoundHandler</code> factory that returns a callable. The returned callable accepts two arguments:</p>
+<ol>
+<li>A <code>\Psr\Http\Message\RequestInterface</code> instance</li>
+<li>A <code>\Psr\Http\Message\ResponseInterface</code> instance</li>
+</ol>
+<p>The callable <strong>MUST</strong> return an appropriate <code>\Psr\Http\Message\ResponseInterface</code> instance.</p>
+
             </div>
           </div>
           <footer>
