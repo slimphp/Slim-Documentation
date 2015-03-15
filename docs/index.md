@@ -1,46 +1,55 @@
 # Slim Framework
 
-Slim is a micro framework that helps you quickly write simple yet powerful PHP web applications and APIs. It dispatches HTTP requests to the appropriate callbacks for a specific HTTP URI and method. Slim also supports concentric middleware layers around your Slim application.
+[![Build Status](https://travis-ci.org/slimphp/Slim.svg?branch=develop)](https://travis-ci.org/slimphp/Slim)
+
+Slim is a PHP micro framework that helps you quickly write simple yet powerful web applications and APIs. Learn more at these links:
+
+- [Website](http://www.slimframework.com)
+- [Documentation](http://docs.slimframework.com)
+- [Support Forum](http://help.slimframework.com)
+- [Twitter](https://twitter.com/slimphp)
+
+## Install
+
+Via [Composer](https://getcomposer.org/)
+
+```bash
+$ composer require slim/slim
+```
+
+Requires PHP 5.4.0 or newer.
 
 ## Usage
 
-    <?php
-    $app = new \Slim\App();
-    $app->get('/hello/:name', function ($name) {
-        echo "Hello, $name";
-    });
-    $app->run();
+```php
+$app = new \Slim\App();
+$app->get('/hello/{name}', function ($request, $response, $args) {
+    echo "Hello, " . $args['name'];
+});
+$app->run();
+```
 
-## Support
+## Testing
 
-* [Website](http://www.slimframework.com)
-* [Support Forum](http://help.slimframework.com)
-* [Twitter](https://twitter.com/slimphp)
+```bash
+phpunit
+```
 
-## Author
+## Contributing
 
-[Josh Lockhart](https://joshlockhart.com)
+Please see [CONTRIBUTING](https://github.com/slimphp/Slim/blob/master/CONTRIBUTING.md) for details.
+
+## Security
+
+If you discover any security related issues, please email security@slimframework.com instead of using the issue tracker.
+
+## Credits
+
+- [Josh Lockhart](https://github.com/codeguy)
+- [Andrew Smith](https://github.com/silentworks)
+- [Gabriel Manricks](https://github.com/gmanricks) 
+- [All Contributors](https://github.com/slimphp/Slim/graphs/contributors)
 
 ## License
 
-The MIT License (MIT)
-
-Copyright (c) 2015 Josh Lockhart
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+The MIT License (MIT). Please see [License File](https://github.com/slimphp/Slim/blob/master/LICENSE.md) for more information.
