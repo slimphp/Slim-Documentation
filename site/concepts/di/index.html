@@ -73,7 +73,10 @@
                             <li class="toctree-l2"><a href="#container">Container</a></li>
                             
                         
-                            <li class="toctree-l2"><a href="#custom-services">Custom services</a></li>
+                            <li class="toctree-l2"><a href="#services">Services</a></li>
+                            
+                        
+                            <li class="toctree-l2"><a href="#service-providers">Service providers</a></li>
                             
                         
                         </ul>
@@ -143,24 +146,20 @@
 
     
         
-            <li class="toctree-l1 ">
-                <a class="" href="../../errors">Error Handling</a>
-            </li>
-        
-
-    
-        
-            <li class="toctree-l1 ">
-                <a class="" href="../../configuration">Configuration</a>
-            </li>
-        
-
-    
-        
-        <span>Interfaces</span>
+        <span>Error Handling</span>
             
                 <li class="toctree-l1 ">
-                    <a class="" href="../../interface_collection">Collection</a>
+                    <a class="" href="../../handlers/error">500 Server Error</a>
+                    
+                </li>
+            
+                <li class="toctree-l1 ">
+                    <a class="" href="../../handlers/not-found">404 Not Found</a>
+                    
+                </li>
+            
+                <li class="toctree-l1 ">
+                    <a class="" href="../../handlers/not-allowed">405 Not Allowed</a>
                     
                 </li>
             
@@ -169,11 +168,6 @@
     
         
         <span>Contributors</span>
-            
-                <li class="toctree-l1 ">
-                    <a class="" href="../../contributors/guidelines">Guidelines</a>
-                    
-                </li>
             
                 <li class="toctree-l1 ">
                     <a class="" href="../../contributors/strategy">Branching Strategy</a>
@@ -215,7 +209,7 @@
               <h1 id="container">Container</h1>
 <p>Each Slim application has <em>dependencies</em>. Examples include the Environment, Request, Response, and Router objects described above.</p>
 <p>Out of the box, Slim provides a first-party implementation for each dependency. However, it's possible to provide custom implementations for each dependency because the Slim application is an instance of the <a href="http://pimple.sensiolabs.org/">Pimple</a> dependency injection container. Each application dependency is a Pimple service that lazily instantiates and returns an  appropriate object upon request.</p>
-<h1 id="custom-services">Custom services</h1>
+<h1 id="services">Services</h1>
 <p>To override a Slim application dependency, inject your own Pimple service before you invoke the Slim application's <code>run()</code> method. You may override any of these default application services:</p>
 <dl>
 <dt>settings</dt>
@@ -228,8 +222,6 @@
 <dd>This service must return a new instance of <code>\Psr\Http\Message\ResponseInterface</code>.</dd>
 <dt>router</dt>
 <dd>This service must return a <em>shared</em> instance of <code>\Slim\Interfaces\RouterInterface</code>.</dd>
-<dt>view</dt>
-<dd>This service must return a <em>shared</em> instance of <code>\Slim\Interfaces\ViewInterface</code>.</dd>
 <dt>errorHandler</dt>
 <dd>This service must return a callable to be invoked if there is an application error. The callable <strong>MUST</strong> return an instance of <code>\Psr\Http\Message\ResponseInterface</code>. The callable <strong>SHOULD</strong> accept three arguments:</dd>
 </dl>
@@ -256,6 +248,29 @@
 <li>Array of allowed HTTP methods</li>
 </ol>
 <p>You most likely <strong>do not</strong> need to replace these dependencies. However, you can if necessary. Slim's default service implementations live in the Slim application's <code>__construct()</code> function.</p>
+<h1 id="service-providers">Service providers</h1>
+<p>Each Slim application extends the <code>\Pimple\Container</code> class. This means each Slim application can accept and register <a href="http://pimple.sensiolabs.org/#extending-a-container">Pimple Service Providers</a>. You register Pimple Service Providers with the Slim application's <code>register()</code> method.</p>
+<p>A simple example is the <a href="../../features/templates/#the-slimtwig-view-component">slim/twig-view</a> component. After you install the <code>slim/twig-view</code> component with Composer, you can register the component with a Slim application like this:</p>
+<pre><code class="php">// Create Slim app
+$app = new \Slim\App();
+
+// Register Twig View service
+$app-&gt;register(new \Slim\Views\Twig('path/to/templates', [
+    'cache' =&gt; 'path/to/cache'
+]));
+
+// Use Twig View service in route
+$app-&gt;get('/hello/{name}', function ($request, $response, $args) {
+    $this['view']-&gt;render('profile.html', [
+        'name' =&gt; $args['name']
+    ]);
+})-&gt;setName('profile');
+
+// Run app
+$app-&gt;run();
+</code></pre>
+
+<p>The <code>slim/twig-view</code> service provider adds a new <code>view</code> service to the Slim application container that you can use to render Twig templates.</p>
 
             </div>
           </div>

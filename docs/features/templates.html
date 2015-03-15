@@ -46,7 +46,7 @@ $app->get('/user/{id:\d+}', function ($request, $response, $args) {
 # Templates
 
 The Slim Framework does not provide a built-in templating system.
-Instead, you may generate output using the view-related tools most
+Instead, you may generate output using third-party template-related tools most
 appropriate for your Slim application. Whichever tools you choose,
 they are still bound by the rules above: content must be written
 directly to the Response object or captured into the current output buffer.
@@ -72,8 +72,8 @@ with Composer. Execute this bash command in your project's root directory.
 
 ### Register the view service
 
-The `slim/twig-view` component implements the `\Pimple\ServiceProviderInterface`
-interface and must be registerd with the Slim application.
+The `slim/twig-view` component must be registerd with the Slim application
+_before_ you invoke your application's `run()` method.
 
 ```php
 // Create Slim app
@@ -124,9 +124,10 @@ $app->run();
 
 ### The url_for() method
 
-The `slim/twig-view` component exposes a custom `url_for()` method
+The `slim/twig-view` component exposes a custom `url_for()` function
 to your Twig templates. You can use this function to generate complete
-URLs to any Slim application named route. This method accepts two arguments:
+URLs to any named route in your Slim application. The `url_for()`
+function accepts two arguments:
 
 1. A route name
 2. A hash of route placeholder names and replacement values

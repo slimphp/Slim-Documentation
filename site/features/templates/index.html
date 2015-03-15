@@ -147,24 +147,20 @@
 
     
         
-            <li class="toctree-l1 ">
-                <a class="" href="../../errors">Error Handling</a>
-            </li>
-        
-
-    
-        
-            <li class="toctree-l1 ">
-                <a class="" href="../../configuration">Configuration</a>
-            </li>
-        
-
-    
-        
-        <span>Interfaces</span>
+        <span>Error Handling</span>
             
                 <li class="toctree-l1 ">
-                    <a class="" href="../../interface_collection">Collection</a>
+                    <a class="" href="../../handlers/error">500 Server Error</a>
+                    
+                </li>
+            
+                <li class="toctree-l1 ">
+                    <a class="" href="../../handlers/not-found">404 Not Found</a>
+                    
+                </li>
+            
+                <li class="toctree-l1 ">
+                    <a class="" href="../../handlers/not-allowed">405 Not Allowed</a>
                     
                 </li>
             
@@ -173,11 +169,6 @@
     
         
         <span>Contributors</span>
-            
-                <li class="toctree-l1 ">
-                    <a class="" href="../../contributors/guidelines">Guidelines</a>
-                    
-                </li>
             
                 <li class="toctree-l1 ">
                     <a class="" href="../../contributors/strategy">Branching Strategy</a>
@@ -253,7 +244,7 @@ demonstrates this scenario inside a Slim application route:</p>
 
 <h1 id="templates">Templates</h1>
 <p>The Slim Framework does not provide a built-in templating system.
-Instead, you may generate output using the view-related tools most
+Instead, you may generate output using third-party template-related tools most
 appropriate for your Slim application. Whichever tools you choose,
 they are still bound by the rules above: content must be written
 directly to the Response object or captured into the current output buffer.</p>
@@ -273,8 +264,8 @@ with Composer. Execute this bash command in your project's root directory.</p>
 <pre><code>composer require slim/twig-view
 </code></pre>
 <h3 id="register-the-view-service">Register the view service</h3>
-<p>The <code>slim/twig-view</code> component implements the <code>\Pimple\ServiceProviderInterface</code>
-interface and must be registerd with the Slim application.</p>
+<p>The <code>slim/twig-view</code> component must be registerd with the Slim application
+<em>before</em> you invoke your application's <code>run()</code> method.</p>
 <pre><code class="php">// Create Slim app
 $app = new \Slim\App();
 
@@ -318,9 +309,10 @@ $app-&gt;run();
 </code></pre>
 
 <h3 id="the-url_for-method">The url_for() method</h3>
-<p>The <code>slim/twig-view</code> component exposes a custom <code>url_for()</code> method
+<p>The <code>slim/twig-view</code> component exposes a custom <code>url_for()</code> function
 to your Twig templates. You can use this function to generate complete
-URLs to any Slim application named route. This method accepts two arguments:</p>
+URLs to any named route in your Slim application. The <code>url_for()</code>
+function accepts two arguments:</p>
 <ol>
 <li>A route name</li>
 <li>A hash of route placeholder names and replacement values</li>
