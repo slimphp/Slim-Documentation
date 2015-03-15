@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Installation - Slim Framework</title>
+  <title>405 Not Allowed - Slim Framework</title>
   
 
   
@@ -44,26 +44,13 @@
         
         <span>Get Started</span>
             
-                <li class="toctree-l1 current">
-                    <a class="current" href=".">Installation</a>
-                    
-                        <ul>
-                        
-                            <li class="toctree-l2"><a href="#system-requirements">System Requirements</a></li>
-                            
-                        
-                            <li class="toctree-l2"><a href="#install-with-composer">Install with Composer</a></li>
-                            
-                        
-                            <li class="toctree-l2"><a href="#install-manually">Install Manually</a></li>
-                            
-                        
-                        </ul>
+                <li class="toctree-l1 ">
+                    <a class="" href="../../start/installation">Installation</a>
                     
                 </li>
             
                 <li class="toctree-l1 ">
-                    <a class="" href="../web-servers">Web Servers</a>
+                    <a class="" href="../../start/web-servers">Web Servers</a>
                     
                 </li>
             
@@ -149,17 +136,21 @@
         <span>Error Handling</span>
             
                 <li class="toctree-l1 ">
-                    <a class="" href="../../handlers/error">500 Server Error</a>
+                    <a class="" href="../error">500 Server Error</a>
                     
                 </li>
             
                 <li class="toctree-l1 ">
-                    <a class="" href="../../handlers/not-found">404 Not Found</a>
+                    <a class="" href="../not-found">404 Not Found</a>
                     
                 </li>
             
-                <li class="toctree-l1 ">
-                    <a class="" href="../../handlers/not-allowed">405 Not Allowed</a>
+                <li class="toctree-l1 current">
+                    <a class="current" href=".">405 Not Allowed</a>
+                    
+                        <ul>
+                        
+                        </ul>
                     
                 </li>
             
@@ -197,7 +188,7 @@
           <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../..">Docs</a> &raquo;</li>
-    <li>Installation</li>
+    <li>405 Not Allowed</li>
       <li class="wy-breadcrumbs-aside">
         
       </li>
@@ -206,42 +197,17 @@
 </div>
           <div role="main">
             <div class="section">
-              <h1 id="system-requirements">System Requirements</h1>
-<ul>
-<li>Web server with URL rewriting</li>
-<li>PHP 5.4.0 or newer</li>
-</ul>
-<h1 id="install-with-composer">Install with Composer</h1>
-<p>The preferred installation method is <a href="https://getcomposer.org/">Composer</a>. Navigate into your project directory and execute the following bash command. This command downloads the Slim Framework and its third-party dependencies into your project's <code>vendor/</code> directory.</p>
-<pre><code>composer require slim/slim
-</code></pre>
-<p>Next, require the Composer autoloader into your PHP script.</p>
-<pre><code>&lt;?php
-require 'vendor/autoload.php';
-</code></pre>
-<h1 id="install-manually">Install Manually</h1>
-<p>You can install the Slim Framework without Composer. Download the Slim Framework files into your project directory. Next, require the <code>Slim/Autoloader.php</code> file into your PHP script and invoke its static <code>register()</code> method.</p>
-<pre><code>&lt;?php
-require 'Slim/Autoloader.php';
-\Slim\Autoloader::register();
-</code></pre>
-<p>If you install Slim manually, you are responsible for installing and autoloading these third-party dependencies:</p>
-<ul>
-<li><a href="http://pimple.sensiolabs.org/">Pimple 3.x</a></li>
-<li><a href="https://github.com/php-fig/http-message">PSR HTTP Message 0.x</a></li>
-<li><a href="https://github.com/nikic/FastRoute/">FastRoute 4.x</a></li>
-</ul>
-
+              
             </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../web-servers" class="btn btn-neutral float-right" title="Web Servers"/>Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../../contributors/strategy" class="btn btn-neutral float-right" title="Branching Strategy"/>Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../.." class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../not-found" class="btn btn-neutral" title="404 Not Found"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -267,8 +233,8 @@ require 'Slim/Autoloader.php';
 <div class="rst-versions" role="note" style="cursor: pointer">
     <span class="rst-current-version" data-toggle="rst-current-version">
         
-      <span><a href="../.." style="color: #fcfcfc;">&laquo; Previous</a></span>
-      <span style="margin-left: 15px"><a href="../web-servers" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../not-found" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      <span style="margin-left: 15px"><a href="../../contributors/strategy" style="color: #fcfcfc">Next &raquo;</a></span>
     </span>
 </div>
 </body>
