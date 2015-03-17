@@ -14,8 +14,8 @@ A Slim Framework application's error handler is a Pimple service. You can substi
 
 ```php
 $app['errorHandler'] = function ($c) {
-    return function ($request, $response, $exception) use ($c) {
-        return $c['response']->withStatus(500)
+    return function ($request, $response, $exception) {
+        return $response->withStatus(500)
                              ->withHeader('Content-Type', 'text/html')
                              ->write('Something went wrong!');
     };
