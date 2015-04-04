@@ -9,7 +9,7 @@ application's `get` method.
 
 ```php
 <?php
-$app = new \Slim\Slim();
+$app = new \Slim\App();
 $app->get('/books/{id}', function ($request, $response, $args) {
     //Show book identified by $args['id']
 });
@@ -25,7 +25,7 @@ application's `post` method.
 
 ```php
 <?php
-$app = new \Slim\Slim();
+$app = new \Slim\App();
 $app->post('/books', function ($request, $response, $args) {
     // create new book
 });
@@ -40,7 +40,7 @@ application's `put` method.
 
 ```php
 <?php
-$app = new \Slim\Slim();
+$app = new \Slim\App();
 $app->put('/books/{id}', function ($request, $response, $args) {
     // Update book identified by $args['id']
 });
@@ -55,7 +55,7 @@ application's `delete` method.
 
 ```php
 <?php
-$app = new \Slim\Slim();
+$app = new \Slim\App();
 $app->delete('/books/{id}', function ($request, $response, $args) {
     // Delete book identified by $args['id']
 });
@@ -70,7 +70,7 @@ application's `options` method.
 
 ```php
 <?php
-$app = new \Slim\Slim();
+$app = new \Slim\App();
 $app->options('/books/{id}', function ($request, $response, $args) {
     // Return response headers
 });
@@ -85,7 +85,7 @@ different methods on the same callback.
 
 ```php
 <?php
-$app = new \Slim\Slim();
+$app = new \Slim\App();
 $app->map(['GET', 'POST'], '/books', function ($request, $response, $args) {
     // create new book or list all books
 });
