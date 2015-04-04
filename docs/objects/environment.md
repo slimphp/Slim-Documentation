@@ -1,15 +1,14 @@
 # The Environment Object
 
-The Environment object encapsulates the current global environment, including the HTTP request method, URI, and headers. It also includes several properties from the `$_SERVER` superglobal array. The Environment object effectively decouples a Slim application from the global environment. Decoupling the Slim application from the PHP global environment lets us create HTTP requests that may (or may not) resemble the global environment. This is particuarly useful for unit testing. The Environment object is registered as a Pimple service on the application instance. You can fetch the Environment object like this:
+The Environment object encapsulates the `$_SERVER` superglobal array and decouples the Slim application from the PHP global environment. Decoupling the Slim application from the PHP global environment lets us create HTTP requests that may (or may not) resemble the global environment. This is particuarly useful for unit testing and initiating sub-requests. You can fetch the current Environment object anywhere in your Slim application like this:
 
-    <?php
-    $environment = $app['environment'];
-
-You rarely access the Environment object directly. Instead, the application's Environment object exists only to decouple the global environment and inform the Request object. It otherwise lives quietly in the background.
+```php
+$environment = $app['environment'];
+```
 
 ## Environment Properties
 
-Each Slim application has an Environment object with various properties that determine application behavior. Some properties are required. Other properties are optional.
+Each Slim application has an Environment object with various properties that determine application behavior. Many of these properties mirror those found in the `$_SERVER` superglobal array. Some properties are required. Other properties are optional.
 
 ### Required Properties
 
@@ -17,28 +16,22 @@ REQUEST_METHOD
 :   The HTTP request method. This must be one of "GET", "POST", "PUT", "DELETE", "HEAD", "PATCH", or "OPTIONS".
 
 SCRIPT_NAME
-:   The first part of the HTTP request's URI path that corresponds to the physical directory in which the Slim application is installed relative to the document root directory. This may be an empty string if the application is installed in the top-level of the document root directory. Non-empty values must begin with a `/` forward slash and must not end with a trailing forward slash.
+:   The absolute path name to the front-controller PHP script relative to your document root, disregarding any URL rewriting performed by your web server.
 
-PATH_INFO
-:   The remaining part of the HTTP request's URI path that represents the Slim application route's "virtual" URI. This must begin with a `/` forward slash. A trailing slash is optional.
+REQUEST_URI
+:   The absolute path name of the HTTP request URI, including any URL rewriting changes performed by your web server.
 
 QUERY_STRING
 :   The part of the HTTP request’s URI path after, but not including, the “?”. This may be an empty string if the current HTTP request does not specify a query string.
 
 SERVER_NAME
-:   This can create a fully qualified URL to a Slim application resource when combined with the Environment's `SCRIPT_NAME` and `PATH_INFO` values. This must not be an empty string. The `HTTP_HOST` value should be used instead if present. 
+:   The name of the server host under which the current script is executing. If the script is running on a virtual host, this will be the value defined for that virtual host.
 
 SERVER_PORT
-:   This can create a fully qualified URL to a Slim application resource when combined with the Environment's `SERVER_NAME`, `SCRIPT_NAME` and `PATH_INFO` values. This must be an integer.
+:   The port on the server machine being used by the web server for communication. For default setups, this will be '80'; using SSL, for instance, will change this to whatever your defined secure HTTP port is.
 
-slim.url_scheme
-:   The HTTP request scheme. This must be one of “http” or “https”.
-
-slim.input
-:   The HTTP request body. This may be an empty string if the current HTTP request does not contain a body (i.e., a GET request).
-
-slim.errors
-:   A writable stream resource. This points to `php://stderr` by default.
+HTTPS
+:   Set to a non-empty value if the script was queried through the HTTPS protocol.
 
 ### Optional Properties
 
@@ -63,31 +56,17 @@ PHP_AUTH_DIGEST
 AUTH_TYPE
 :   The HTTP `Authentication` header's authentication type (e.g., "Basic" or "Digest").
 
-## Environment Interface
-
-The Environment object implements the `\Slim\Interfaces\CollectionInterface` interface and provides these methods:
-
-* `set($key, $value)`
-* `get($key, $defaultValue)`
-* `replace(array $items)`
-* `all()`
-* `has($key)`
-* `remove($key)`
-* `clear()`
-* `encrypt(CryptInterface $crypt)`
-* `decrypt(CryptInterface $crypt)`
-
 ## Mock Environments
 
 Each Slim application instantiates an Environment object using information from the current global environment. However, you may also create mock environment objects with custom information. Mock Environment objects are only useful when writing unit tests.
 
-    <?php
-    $env = \Slim\Environment::mock([
-        'REQUEST_METHOD' => 'PUT',
-        'REQUEST_URI' => '/foo/bar',
-        'QUERY_STRING' => 'abc=123&foo=bar',
-        'SERVER_NAME' => 'example.com',
-        'CONTENT_TYPE' => 'application/json;charset=utf8',
-        'CONTENT_LENGTH' => 15,
-        'slim.input' => '{"test": "123"}'
-    ]);
+```php
+$env = \Slim\Environment::mock([
+    'REQUEST_METHOD' => 'PUT',
+    'REQUEST_URI' => '/foo/bar',
+    'QUERY_STRING' => 'abc=123&foo=bar',
+    'SERVER_NAME' => 'example.com',
+    'CONTENT_TYPE' => 'application/json;charset=utf8',
+    'CONTENT_LENGTH' => 15
+]);
+```

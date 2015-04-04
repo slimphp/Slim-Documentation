@@ -226,8 +226,8 @@
 <dd>This service must return a callable to be invoked if there is an application error. The callable <strong>MUST</strong> return an instance of <code>\Psr\Http\Message\ResponseInterface</code>. The callable <strong>SHOULD</strong> accept three arguments:</dd>
 </dl>
 <ol>
-<li><code>\Psr\Http\RequestInterface</code></li>
-<li><code>\Psr\Http\ResponseInterface</code></li>
+<li><code>\Psr\Http\Message\RequestInterface</code></li>
+<li><code>\Psr\Http\Message\ResponseInterface</code></li>
 <li><code>\Exception</code></li>
 </ol>
 <dl>
@@ -235,16 +235,16 @@
 <dd>This service must return a callable to be invoked if the current HTTP request URI does not match an application route. The callable <strong>MUST</strong> return an instance of <code>\Psr\Http\Message\ResponseInterface</code>. The callable <strong>SHOULD</strong> accept two arguments:</dd>
 </dl>
 <ol>
-<li><code>\Psr\Http\RequestInterface</code></li>
-<li><code>\Psr\Http\ResponseInterface</code></li>
+<li><code>\Psr\Http\Message\RequestInterface</code></li>
+<li><code>\Psr\Http\Message\ResponseInterface</code></li>
 </ol>
 <dl>
 <dt>notAllowedHandler</dt>
 <dd>This service must return a callable to be invoked if an application route matches the current HTTP request path but not its method. The callable <strong>MUST</strong> return an instance of <code>\Psr\Http\Message\ResponseInterface</code>. The callable <strong>SHOULD</strong> accept three arguments:</dd>
 </dl>
 <ol>
-<li><code>\Psr\Http\RequestInterface</code></li>
-<li><code>\Psr\Http\ResponseInterface</code></li>
+<li><code>\Psr\Http\Message\RequestInterface</code></li>
+<li><code>\Psr\Http\Message\ResponseInterface</code></li>
 <li>Array of allowed HTTP methods</li>
 </ol>
 <p>You most likely <strong>do not</strong> need to replace these dependencies. However, you can if necessary. Slim's default service implementations live in the Slim application's <code>__construct()</code> function.</p>

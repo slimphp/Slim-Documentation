@@ -26,21 +26,21 @@ router
 errorHandler
 :   This service must return a callable to be invoked if there is an application error. The callable **MUST** return an instance of `\Psr\Http\Message\ResponseInterface`. The callable **SHOULD** accept three arguments:
 
-1. `\Psr\Http\RequestInterface`
-2. `\Psr\Http\ResponseInterface`
+1. `\Psr\Http\Message\RequestInterface`
+2. `\Psr\Http\Message\ResponseInterface`
 3. `\Exception`
 
 notFoundHandler
 :   This service must return a callable to be invoked if the current HTTP request URI does not match an application route. The callable **MUST** return an instance of `\Psr\Http\Message\ResponseInterface`. The callable **SHOULD** accept two arguments:
 
-1. `\Psr\Http\RequestInterface`
-2. `\Psr\Http\ResponseInterface`
+1. `\Psr\Http\Message\RequestInterface`
+2. `\Psr\Http\Message\ResponseInterface`
 
 notAllowedHandler
 :   This service must return a callable to be invoked if an application route matches the current HTTP request path but not its method. The callable **MUST** return an instance of `\Psr\Http\Message\ResponseInterface`. The callable **SHOULD** accept three arguments:
 
-1. `\Psr\Http\RequestInterface`
-2. `\Psr\Http\ResponseInterface`
+1. `\Psr\Http\Message\RequestInterface`
+2. `\Psr\Http\Message\ResponseInterface`
 3. Array of allowed HTTP methods
 
 You most likely **do not** need to replace these dependencies. However, you can if necessary. Slim's default service implementations live in the Slim application's `__construct()` function.
