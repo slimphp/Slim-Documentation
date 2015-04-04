@@ -65,8 +65,8 @@ You can get the arguments used in route via `$args`
 
 ## OPTIONS Route
 
-You can add a route that handles only on `DELETE` method via Slim
-application's `delete` method.
+You can add a route that handles only on `OPTIONS` method via Slim
+application's `options` method.
 
 ```php
 <?php
