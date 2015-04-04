@@ -314,6 +314,18 @@ $app-&gt;map(['GET', 'POST'], '/books', function ($request, $response, $args) {
 <dd>The third argument is an associative array that contains values for the current route's named placeholders.</dd>
 </dl>
 <p>There are two ways you can write content to the HTTP response. First, you can simply <code>echo()</code> content from the route callback. This content will be appended to the current HTTP response object. Second, you can return a <code>Psr\Http\Message\ResponseInterface</code> object.</p>
+<h3 id="closure-binding">Closure binding</h3>
+<p>If you use a <code>Closure</code> instance as the route callback, the closure's state is bound to the <code>\Slim\App</code> instance. This means you can access the <code>\Slim\App</code> object from inside the route callback with <code>$this</code>. Becaues the <code>\Slim\App</code> is itself an instance of <code>\Pimple\Container</code>, you can quickly access any registered Pimple services from inside the Closure callback like this:</p>
+<pre><code class="php">$app = new \Slim\App();
+$app-&gt;get('/hello/{name}', function ($request, $response, $args) {
+    // Use app HTTP cookie service
+    $this['cookies']-&gt;set('name', [
+        'name' =&gt; $args['name'],
+        'expires' =&gt; '7 days'
+    ]);
+});
+</code></pre>
+
 <h2 id="route-placeholders">Route placeholders</h2>
 <p>Each routing method described above accepts a URL pattern that is matched against the current HTTP request URI. Route patterns may use named placeholders to dynamically match HTTP request URI segments.</p>
 <h3 id="format">Format</h3>
