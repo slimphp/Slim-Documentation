@@ -113,6 +113,20 @@
                         
                             <li class="toctree-l2"><a href="#the-router-object">The Router Object</a></li>
                             
+                                <li><a class="toctree-l3" href="#get-route">GET Route</a></li>
+                            
+                                <li><a class="toctree-l3" href="#post-route">POST Route</a></li>
+                            
+                                <li><a class="toctree-l3" href="#put-route">PUT Route</a></li>
+                            
+                                <li><a class="toctree-l3" href="#delete-route">DELETE Route</a></li>
+                            
+                                <li><a class="toctree-l3" href="#options-route">OPTIONS Route</a></li>
+                            
+                                <li><a class="toctree-l3" href="#advanced-usage">Advanced Usage</a></li>
+                            
+                                <li><a class="toctree-l3" href="#restricting-place-holders">Restricting place holders</a></li>
+                            
                         
                         </ul>
                     
@@ -201,7 +215,76 @@
           <div role="main">
             <div class="section">
               <h1 id="the-router-object">The Router Object</h1>
-<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nostrum non, aliquam laudantium voluptate perspiciatis corrupti quasi animi eius quisquam amet sit odit quos quaerat perferendis fugit omnis, repudiandae facilis. Est!</p>
+<p>Slim router under the hood make use of FastRoute.</p>
+<h2 id="get-route">GET Route</h2>
+<p>You can add a route that handles only on <code>GET</code> method via Slim
+application's <code>get</code> method.</p>
+<pre><code class="php">&lt;?php
+$app = new \Slim\App();
+$app-&gt;get('/books/{id}', function ($request, $response, $args) {
+    //Show book identified by $args['id']
+});
+</code></pre>
+
+<p>You can get the arguments used in route via <code>$args</code></p>
+<h2 id="post-route">POST Route</h2>
+<p>You can add a route that handles only on <code>POST</code> method via Slim
+application's <code>post</code> method.</p>
+<pre><code class="php">&lt;?php
+$app = new \Slim\App();
+$app-&gt;post('/books', function ($request, $response, $args) {
+    // create new book
+});
+</code></pre>
+
+<p>You can get the arguments used in route via <code>$args</code></p>
+<h2 id="put-route">PUT Route</h2>
+<p>You can add a route that handles only on <code>PUT</code> method via Slim
+application's <code>put</code> method.</p>
+<pre><code class="php">&lt;?php
+$app = new \Slim\App();
+$app-&gt;put('/books/{id}', function ($request, $response, $args) {
+    // Update book identified by $args['id']
+});
+</code></pre>
+
+<p>You can get the arguments used in route via <code>$args</code></p>
+<h2 id="delete-route">DELETE Route</h2>
+<p>You can add a route that handles only on <code>DELETE</code> method via Slim
+application's <code>delete</code> method.</p>
+<pre><code class="php">&lt;?php
+$app = new \Slim\App();
+$app-&gt;delete('/books/{id}', function ($request, $response, $args) {
+    // Delete book identified by $args['id']
+});
+</code></pre>
+
+<p>You can get the arguments used in route via <code>$args</code></p>
+<h2 id="options-route">OPTIONS Route</h2>
+<p>You can add a route that handles only on <code>OPTIONS</code> method via Slim
+application's <code>options</code> method.</p>
+<pre><code class="php">&lt;?php
+$app = new \Slim\App();
+$app-&gt;options('/books/{id}', function ($request, $response, $args) {
+    // Return response headers
+});
+</code></pre>
+
+<p>You can get the arguments used in route via <code>$args</code></p>
+<h2 id="advanced-usage">Advanced Usage</h2>
+<p>You can either make use of Slim application's map method to handle
+different methods on the same callback.</p>
+<pre><code class="php">&lt;?php
+$app = new \Slim\App();
+$app-&gt;map(['GET', 'POST'], '/books', function ($request, $response, $args) {
+    // create new book or list all books
+});
+</code></pre>
+
+<h2 id="restricting-place-holders">Restricting place holders</h2>
+<p>By default the place holders are written inside <code>{}</code> and can accept any
+values. But you can wrap it like <code>{id:[0-9]+}</code> to make sure the value of
+<code>id</code> is always a digit.</p>
 
             </div>
           </div>
