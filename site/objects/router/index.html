@@ -113,19 +113,13 @@
                         
                             <li class="toctree-l2"><a href="#the-router-object">The Router Object</a></li>
                             
-                                <li><a class="toctree-l3" href="#get-route">GET Route</a></li>
+                                <li><a class="toctree-l3" href="#how-to-create-routes">How to create routes</a></li>
                             
-                                <li><a class="toctree-l3" href="#post-route">POST Route</a></li>
+                                <li><a class="toctree-l3" href="#route-callbacks">Route callbacks</a></li>
                             
-                                <li><a class="toctree-l3" href="#put-route">PUT Route</a></li>
+                                <li><a class="toctree-l3" href="#route-placeholders">Route placeholders</a></li>
                             
-                                <li><a class="toctree-l3" href="#delete-route">DELETE Route</a></li>
-                            
-                                <li><a class="toctree-l3" href="#options-route">OPTIONS Route</a></li>
-                            
-                                <li><a class="toctree-l3" href="#advanced-usage">Advanced Usage</a></li>
-                            
-                                <li><a class="toctree-l3" href="#restricting-place-holders">Restricting place holders</a></li>
+                                <li><a class="toctree-l3" href="#route-names">Route names</a></li>
                             
                         
                         </ul>
@@ -215,76 +209,150 @@
           <div role="main">
             <div class="section">
               <h1 id="the-router-object">The Router Object</h1>
-<p>Slim router under the hood make use of FastRoute.</p>
-<h2 id="get-route">GET Route</h2>
-<p>You can add a route that handles only on <code>GET</code> method via Slim
-application's <code>get</code> method.</p>
-<pre><code class="php">&lt;?php
-$app = new \Slim\App();
+<p>The Slim Framework's router is built on top of the <a href="https://github.com/nikic/FastRoute">nikic/fastroute</a> component, and it is remarkably fast and stable. </p>
+<h2 id="how-to-create-routes">How to create routes</h2>
+<p>You can define application routes using proxy methods on the <code>\Slim\App</code> instance. The Slim Framework provides methods for the most popular HTTP methods.</p>
+<h3 id="get-route">GET Route</h3>
+<p>You can add a route that handles only <code>GET</code> HTTP requests with the Slim
+application's <code>get()</code> method. It accepts two arguments:</p>
+<ol>
+<li>The route pattern (with optional named placeholders)</li>
+<li>The route callback</li>
+</ol>
+<pre><code class="php">$app = new \Slim\App();
 $app-&gt;get('/books/{id}', function ($request, $response, $args) {
-    //Show book identified by $args['id']
+    // Show book identified by $args['id']
 });
 </code></pre>
 
-<p>You can get the arguments used in route via <code>$args</code></p>
-<h2 id="post-route">POST Route</h2>
-<p>You can add a route that handles only on <code>POST</code> method via Slim
-application's <code>post</code> method.</p>
-<pre><code class="php">&lt;?php
-$app = new \Slim\App();
+<h3 id="post-route">POST Route</h3>
+<p>You can add a route that handles only <code>POST</code> HTTP requests with the Slim
+application's <code>post()</code> method. It accepts two arguments:</p>
+<ol>
+<li>The route pattern (with optional named placeholders)</li>
+<li>The route callback</li>
+</ol>
+<pre><code class="php">$app = new \Slim\App();
 $app-&gt;post('/books', function ($request, $response, $args) {
-    // create new book
+    // Create new book
 });
 </code></pre>
 
-<p>You can get the arguments used in route via <code>$args</code></p>
-<h2 id="put-route">PUT Route</h2>
-<p>You can add a route that handles only on <code>PUT</code> method via Slim
-application's <code>put</code> method.</p>
-<pre><code class="php">&lt;?php
-$app = new \Slim\App();
+<h3 id="put-route">PUT Route</h3>
+<p>You can add a route that handles only <code>PUT</code> HTTP requests with the Slim
+application's <code>put()</code> method. It accepts two arguments:</p>
+<ol>
+<li>The route pattern (with optional named placeholders)</li>
+<li>The route callback</li>
+</ol>
+<pre><code class="php">$app = new \Slim\App();
 $app-&gt;put('/books/{id}', function ($request, $response, $args) {
     // Update book identified by $args['id']
 });
 </code></pre>
 
-<p>You can get the arguments used in route via <code>$args</code></p>
-<h2 id="delete-route">DELETE Route</h2>
-<p>You can add a route that handles only on <code>DELETE</code> method via Slim
-application's <code>delete</code> method.</p>
-<pre><code class="php">&lt;?php
-$app = new \Slim\App();
+<h3 id="delete-route">DELETE Route</h3>
+<p>You can add a route that handles only <code>DELETE</code> HTTP requests with the Slim
+application's <code>delete()</code> method. It accepts two arguments:</p>
+<ol>
+<li>The route pattern (with optional named placeholders)</li>
+<li>The route callback</li>
+</ol>
+<pre><code class="php">$app = new \Slim\App();
 $app-&gt;delete('/books/{id}', function ($request, $response, $args) {
     // Delete book identified by $args['id']
 });
 </code></pre>
 
-<p>You can get the arguments used in route via <code>$args</code></p>
-<h2 id="options-route">OPTIONS Route</h2>
-<p>You can add a route that handles only on <code>OPTIONS</code> method via Slim
-application's <code>options</code> method.</p>
-<pre><code class="php">&lt;?php
-$app = new \Slim\App();
+<h3 id="options-route">OPTIONS Route</h3>
+<p>You can add a route that handles only <code>OPTIONS</code> HTTP requests with the Slim
+application's <code>options()</code> method. It accepts two arguments:</p>
+<ol>
+<li>The route pattern (with optional named placeholders)</li>
+<li>The route callback</li>
+</ol>
+<pre><code class="php">$app = new \Slim\App();
 $app-&gt;options('/books/{id}', function ($request, $response, $args) {
     // Return response headers
 });
 </code></pre>
 
-<p>You can get the arguments used in route via <code>$args</code></p>
-<h2 id="advanced-usage">Advanced Usage</h2>
-<p>You can either make use of Slim application's map method to handle
-different methods on the same callback.</p>
-<pre><code class="php">&lt;?php
-$app = new \Slim\App();
-$app-&gt;map(['GET', 'POST'], '/books', function ($request, $response, $args) {
-    // create new book or list all books
+<h3 id="patch-route">PATCH Route</h3>
+<p>You can add a route that handles only <code>PATCH</code> HTTP requests with the Slim
+application's <code>patch()</code> method. It accepts two arguments:</p>
+<ol>
+<li>The route pattern (with optional named placeholders)</li>
+<li>The route callback</li>
+</ol>
+<pre><code class="php">$app = new \Slim\App();
+$app-&gt;patch('/books/{id}', function ($request, $response, $args) {
+    // Apply changes to book identified by $args['id']
 });
 </code></pre>
 
-<h2 id="restricting-place-holders">Restricting place holders</h2>
+<h3 id="custom-route">Custom Route</h3>
+<p>You can add a route that handles multiple HTTP request methods with the Slim application's <code>map()</code> method. It accepts three arguments:</p>
+<ol>
+<li>Array of HTTP methods</li>
+<li>The route pattern (with optional named placeholders)</li>
+<li>The route callback</li>
+</ol>
+<pre><code class="php">$app = new \Slim\App();
+$app-&gt;map(['GET', 'POST'], '/books', function ($request, $response, $args) {
+    // Create new book or list all books
+});
+</code></pre>
+
+<h2 id="route-callbacks">Route callbacks</h2>
+<p>Each routing method described above accepts a callback routine as its final argument. This argument can be any PHP callable, and it accepts three arguments.</p>
+<dl>
+<dt><strong>Request</strong></dt>
+<dd>The first argument is a <code>Psr\Http\Message\RequestInterface</code> object that represents the current HTTP request.</dd>
+<dt><strong>Response</strong></dt>
+<dd>The second argument is a <code>Psr\Http\Message\ResponseInterface</code> object that represents the current HTTP response.</dd>
+<dt><strong>Arguments</strong></dt>
+<dd>The third argument is an associative array that contains values for the current route's named placeholders.</dd>
+</dl>
+<p>There are two ways you can write content to the HTTP response. First, you can simply <code>echo()</code> content from the route callback. This content will be appended to the current HTTP response object. Second, you can return a <code>Psr\Http\Message\ResponseInterface</code> object.</p>
+<h2 id="route-placeholders">Route placeholders</h2>
+<p>Each routing method described above accepts a URL pattern that is matched against the current HTTP request URI. Route patterns may use named placeholders to dynamically match HTTP request URI segments.</p>
+<h3 id="format">Format</h3>
+<p>A route pattern placeholder starts with a <code>{</code>, followed by the placeholder name, ending with a <code>}</code>. This is an example placeholder named <code>name</code>:</p>
+<pre><code class="php">$app = new \Slim\App();
+$app-&gt;get('/hello/{name}', function ($request, $response, $args) {
+    echo &quot;Hello, &quot; . $args['name'];
+});
+</code></pre>
+
+<h3 id="regular-expression-matching">Regular expression matching</h3>
 <p>By default the place holders are written inside <code>{}</code> and can accept any
-values. But you can wrap it like <code>{id:[0-9]+}</code> to make sure the value of
-<code>id</code> is always a digit.</p>
+values. However, placeholders can also require the HTTP request URI to match a particular regular expression. If the current HTTP request URI does not match a placeholder regular expression, the route is not invoked. This is an example placeholder named <code>id</code> that requires a digit.</p>
+<pre><code class="php">$app = new \Slim\App();
+$app-&gt;get('/users/{id:[0-9]+}', function ($request, $response, $args) {
+    // Find user identified by $args['id']
+});
+</code></pre>
+
+<h2 id="route-names">Route names</h2>
+<p>Application route's can be assigned a name. This is useful if you want to programmatically generate a URL to a specific route with the router's <code>urlFor()</code> method. Each routing method described above returns a <code>\Slim\Route</code> object, and this object exposes a <code>setName()</code> method.</p>
+<pre><code class="php">$app = new \Slim\App();
+$app-&gt;get('/hello/{name}', function ($request, $response, $args) {
+    echo &quot;Hello, &quot; . $args['name'];
+})-&gt;setName('hello');
+</code></pre>
+
+<p>You can generate a URL for this named route with the application router's <code>urlFor()</code>  method.</p>
+<pre><code class="php">echo $app['router']-&gt;urlFor('hello', [
+    'name' =&gt; 'Josh'
+]);
+// Outputs &quot;/hello/Josh&quot;
+</code></pre>
+
+<p>The router's <code>urlFor()</code> method accepts two arguments:</p>
+<ol>
+<li>The route name</li>
+<li>Associative array of route pattern placeholders and replacement values</li>
+</ol>
 
             </div>
           </div>

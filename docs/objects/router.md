@@ -126,6 +126,21 @@ Each routing method described above accepts a callback routine as its final argu
 
 There are two ways you can write content to the HTTP response. First, you can simply `echo()` content from the route callback. This content will be appended to the current HTTP response object. Second, you can return a `Psr\Http\Message\ResponseInterface` object.
 
+### Closure binding
+
+If you use a `Closure` instance as the route callback, the closure's state is bound to the `\Slim\App` instance. This means you can access the `\Slim\App` object from inside the route callback with `$this`. Becaues the `\Slim\App` is itself an instance of `\Pimple\Container`, you can quickly access any registered Pimple services from inside the Closure callback like this:
+
+```php
+$app = new \Slim\App();
+$app->get('/hello/{name}', function ($request, $response, $args) {
+    // Use app HTTP cookie service
+    $this['cookies']->set('name', [
+        'name' => $args['name'],
+        'expires' => '7 days'
+    ]);
+});
+```
+
 ## Route placeholders
 
 Each routing method described above accepts a URL pattern that is matched against the current HTTP request URI. Route patterns may use named placeholders to dynamically match HTTP request URI segments.
