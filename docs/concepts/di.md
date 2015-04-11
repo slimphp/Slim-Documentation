@@ -8,11 +8,8 @@ Out of the box, Slim provides a first-party implementation for each dependency. 
 
 To override a Slim application dependency, inject your own Pimple service before you invoke the Slim application's `run()` method. You may override any of these default application services:
 
-settings
-:   This service must return a new instance of `\Slim\Interfaces\ConfigurationInterface`.
-
 environment
-:   This service must return a new instance of `\Slim\Interfaces\EnvironmentInterface`.
+:   This service must return a _shared_ instance of `\Slim\Interfaces\Http\EnvironmentInterface`.
 
 request
 :   This service must return a new instance of `\Psr\Http\Message\RequestInterface`.

@@ -1,6 +1,6 @@
 # The Environment object
 
-This object encapsulates the current PHP global environment, including the HTTP request method, URI, headers, and body. It also contains server variables found in the `$_SERVER` superglobal array. The Environment object effectively decouples a Slim application from the global PHP environment.
+This object encapsulates the current PHP global environment, including the HTTP request method, URI, and headers. It also contains server variables found in the `$_SERVER` superglobal array. The Environment object effectively decouples a Slim application from the global PHP environment.
 
 [Learn more](environment)
 
