@@ -22,7 +22,7 @@ This assumes that Slim's `index.php` is in the root folder of your project (www 
 
 # HipHop Virtual Machine
 
-Your HipHop Virtual Machine configuration file should contain this code (along with other settings you may need). Be sure you change the `ServerRoot` setting to point to your Slim app's document root directory.
+Your HipHop Virtual Machine configuration file should contain this code (along with other settings you may need). Be sure you change the `SourceRoot` setting to point to your Slim app's document root directory.
 
     Server {
         SourceRoot = /path/to/public/directory
