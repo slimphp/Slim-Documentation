@@ -112,50 +112,47 @@ You may also include the `X-HTTP-Method-Override` header in the HTTP request. Yo
 
 In accordance with the PSR-7 standard, you can inspect the Request URI by fetching the Uri instance from the Request object.
 
-    <?php
     $uri = $app->request->getUri();
 
 ### Scheme
 
 You can fetch the HTTP request scheme (e.g., HTTP or HTTPS) with the Uri object's `getScheme()` method.
 
-    <?php
     $scheme = $uri->getScheme();
 
 ### Host
 
 You can fetch the HTTP request's host (e.g., example.com) with the Uri object's `getHost()` method.
 
-    <?php
     $host = $uri->getHost();
 
 ### Port
 
 You can fetch the HTTP request's port number (e.g., 443) with the Uri object's `getPort()` method.
 
-    <?php
     $port = $uri->getPort();
 
 ### URL Path
 
 You can fetch the HTTP request's path (relative to the physical directory in which your Slim application is installed) with the Uri object's `getPath()` method. This method returns a string that is matched against your Slim application routes.
 
-    <?php
     $path = $uri->getPath();
 
 ### URL Base Path
 
 You can fetch the HTTP request's physical base path (relative to the document root) with the Uri object's `getBasePath()` method. This will be an empty string unless the Slim application is installed in a physical subdirectory beneath your document root.
 
-    <?php
     $basePath = $uri->getBasePath();
 
 ### Query String
 
 You can fetch the HTTP request's raw query string (without the leading "?") with the Uri object's `getQuery()` method. This method returns an empty string if no query string is present in the current HTTP request.
 
-    <?php
     $queryString = $uri->getQuery();
+
+You may also fetch an associative array of query string parameters with the Request object's `getQueryParams()` method. This method returns an empty array if no query string is present.
+
+    $queryParams = $request->getQueryParams();
 
 ## Request Headers
 
@@ -216,8 +213,7 @@ The Request object provides additional methods to inspect the HTTP request metad
 
 You can detect AJAX/XHR requests with the Request object's `isAjax()` and `isXhr()` methods. Both methods do the same thing, so choose only one. These methods detect the presence of the `X-Requested-With` HTTP request header and ensure its value is `XMLHttpRequest`. These methods also return `true` if the `isajax` parameter is provided in the HTTP request query string or body.
 
-    <?php
-    if ($app->request->isAjax() === true) {
+    if ($request->isAjax()) {
         // Do something
     }
 
@@ -225,52 +221,32 @@ You can detect AJAX/XHR requests with the Request object's `isAjax()` and `isXhr
 
 You can fetch the HTTP request content type with the Request object's `getContentType()` method. This returns the `Content-Type` header's full value as provided by the HTTP client.
 
-    <?php
-    $contentType = $app->request->getContentType();
+    $contentType = $request->getContentType();
 
 ### Media Type
 
 You may not want the complete `Content-Type` header. What if, instead, you only want the media type? You can fetch the HTTP request media type with the Request object's `getMediaType()` method.
 
-    <?php
-    $mediaType = $app->request->getMediaType();
+    $mediaType = $request->getMediaType();
 
 You can fetch the appended media type parameters as an associative array with the Request object's `getMediaTypeParams()` method.
 
-    <?php
-    $mediaParams = $app->request->getMediaTypeParams();
+    $mediaParams = $request->getMediaTypeParams();
 
 ### Character Set
 
 One of the most common media type parameters is the HTTP request character set. The Request object provides a dedicated method to retrieve this media type parameter.
 
-    <?php
-    $charset = $app->request->getContentCharset();
+    $charset = $request->getContentCharset();
 
 ### Content Length
 
 You can fetch the HTTP request content length with the Request object's `getContentLength()` method.
 
-    <?php
-    $length = $app->request->getContentLength();
+    $length = $request->getContentLength();
 
 ### IP Address
 
-You can fetch the HTTP request's source IP address with the Request object's `getClientIp()` method. This method respects values provided by the `X-Forwarded-For` and `X-Client-IP` headers if present.
+You can fetch the HTTP request's source IP address with the Request object's `getIp()` method. This method respects the `X-Forwarded-For` header if present.
 
-    <?php
-    $ip = $app->request->getClientIp();
-
-### Referrer
-
-You can fetch the HTTP request referrer (if present) with the Request object's `getReferrer()` and `getReferer()` methods.
-
-    <?php
-    $ref = $app->request->getReferer();
-
-### User Agent
-
-You can fetch the HTTP user agent string with the Request object's `getUserAgent()` method.
-
-    <?php
-    $agent = $app->request->getUserAgent();
+    $ip = $request->getIp();
