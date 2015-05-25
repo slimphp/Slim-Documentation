@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Value Objects - Slim Framework</title>
+  <title>PSR-7 - Slim Framework</title>
   
 
   
@@ -76,22 +76,20 @@
                 </li>
             
                 <li class="toctree-l1 current">
-                    <a class="current" href=".">Value Objects</a>
+                    <a class="current" href=".">PSR-7</a>
                     
                         <ul>
                         
-                            <li class="toctree-l2"><a href="#what-are-value-objects">What are value objects?</a></li>
+                            <li class="toctree-l2"><a href="#psr-7">PSR-7</a></li>
+                            
+                        
+                            <li class="toctree-l2"><a href="#value-objects">Value objects</a></li>
                             
                         
                             <li class="toctree-l2"><a href="#how-to-change-value-objects">How to change value objects</a></li>
                             
                         
                         </ul>
-                    
-                </li>
-            
-                <li class="toctree-l1 ">
-                    <a class="" href="../life-cycle">Lifecycle</a>
                     
                 </li>
             
@@ -194,7 +192,7 @@
           <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../..">Docs</a> &raquo;</li>
-    <li>Value Objects</li>
+    <li>PSR-7</li>
       <li class="wy-breadcrumbs-aside">
         
       </li>
@@ -203,10 +201,12 @@
 </div>
           <div role="main">
             <div class="section">
-              <h1 id="what-are-value-objects">What are value objects?</h1>
-<p>Each Slim application's Request and Response objects are <a href="http://en.wikipedia.org/wiki/Value_object"><em>immutable value objects</em></a>. They can be "changed" only by requesting a cloned version that has updated property values.</p>
-<p>Value objects are a source of constant opinion. Some developers love them, and other developers hate them. I was skeptical when Matthew Weier O'Phinney first suggested I use them. After implementing value objects, however, I am 100% on board. Immutable value objects provide stability and predictability that are otherwise impossible with object references.</p>
-<p>Each Slim application starts with an initial Request and Response object pair. These objects are passed into each application middleware layer, and each middleware layer is free to use these objects as it deems fit. If Slim used object references, each middleware layer could never be certain of its own Request and Response objects if further interior middleware can update the same object references. Instead, Slim uses immutable value objects. This means that each middleware's Request and Response objects always remain the same, and they cannot be changed by other middleware. If a middleware wants to modify the Request or Response object, it must create a <em>cloned</em> version with updated properties.</p>
+              <h1 id="psr-7">PSR-7</h1>
+<p>Slim supports <a href="https://github.com/php-fig/http-message">PSR-7</a> interfaces for its HTTP message objects. A Slim application container's <code>request</code> and <code>response</code> services <strong>MUST</strong> return an instance of <code>\Psr\Http\Message\RequestInterface</code> and <code>\Psr\Http\Message\ResponseInterface</code>, respectively.</p>
+<p>Slim provides a built-in PSR-7 implementation. However, you are free to substitute a third-party implementation. Simply override the Slim application container's <code>request</code> and <code>response</code> services and return an object that implements the appropriate PSR-7 interface.</p>
+<h1 id="value-objects">Value objects</h1>
+<p>In accordance with PSR-7, a Slim application's Request and Response objects are <a href="http://en.wikipedia.org/wiki/Value_object"><em>immutable value objects</em></a>. They can be "changed" only by requesting a cloned version that has updated property values.</p>
+<p>A Slim application starts with an initial Request and Response object pair. These objects are passed into each application middleware layer, and each middleware layer is free to use these objects as it deems fit. If Slim used object references, each middleware layer could never be certain of its own Request and Response objects' state if further interior middleware can update the same object references. Instead, Slim uses immutable value objects—each middleware's Request and Response objects always remain the same, and they cannot be changed by other middleware. If a middleware wants to modify the Request or Response object, it must create a <em>cloned</em> version with updated properties.</p>
 <p>Value objects have a small inherent overhead becaue they must be cloned when their properties are updated. This overhead is minimal and does not affect application performance in any meaningful way.</p>
 <h1 id="how-to-change-value-objects">How to change value objects</h1>
 <p>You cannot modify a value object. You can, however, request a copy of a value object that contains your desired changes. Slim's Request and Response objects implement the PSR-7 message interfaces. These interfaces provide methods that have the <code>with</code> prefix, and you can invoke these methods to <em>clone</em> value objects and apply updated properties. For example, the Response object has a <code>withHeader($name, $value)</code> method that returns a cloned value object with a new HTTP header.</p>
@@ -216,6 +216,7 @@
 );
 </code></pre>
 
+<p>Refer to the <a href="http://www.php-fig.org/psr/psr-7/">PSR-7 documentation</a> for more information about these methods.</p>
 
             </div>
           </div>
@@ -223,7 +224,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../life-cycle" class="btn btn-neutral float-right" title="Lifecycle"/>Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../../objects/environment" class="btn btn-neutral float-right" title="Environment"/>Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
         <a href="../middleware" class="btn btn-neutral" title="Middleware"><span class="icon icon-circle-arrow-left"></span> Previous</a>
@@ -253,7 +254,7 @@
     <span class="rst-current-version" data-toggle="rst-current-version">
         
       <span><a href="../middleware" style="color: #fcfcfc;">&laquo; Previous</a></span>
-      <span style="margin-left: 15px"><a href="../life-cycle" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span style="margin-left: 15px"><a href="../../objects/environment" style="color: #fcfcfc">Next &raquo;</a></span>
     </span>
 </div>
 </body>
