@@ -31,7 +31,6 @@ You can detect HTTP `GET` requests with the Request object's `isGet()` method.
 
 You can detect HTTP `POST` requests with the Request object's `isPost()` method.
 
-    <?php
     if ($request->isPost()) {
         // Do something
     }
@@ -40,7 +39,6 @@ You can detect HTTP `POST` requests with the Request object's `isPost()` method.
 
 You can detect HTTP `PUT` requests with the Request object's `isPut()` method.
 
-    <?php
     if ($request->isPut()) {
         // Do something
     }
@@ -49,7 +47,6 @@ You can detect HTTP `PUT` requests with the Request object's `isPut()` method.
 
 You can detect HTTP `DELETE` requests with the Request object's `isDelete()` method.
 
-    <?php
     if ($request->isDelete()) {
         // Do something
     }
@@ -58,7 +55,6 @@ You can detect HTTP `DELETE` requests with the Request object's `isDelete()` met
 
 You can detect HTTP `HEAD` requests with the Request object's `isHead()` method.
 
-    <?php
     if ($request->isHead()) {
         // Do something
     }
@@ -67,7 +63,6 @@ You can detect HTTP `HEAD` requests with the Request object's `isHead()` method.
 
 You can detect HTTP `OPTIONS` requests with the Request object's `isOptions()` method.
 
-    <?php
     if ($request->isOptions()) {
         // Do something
     }
@@ -76,7 +71,6 @@ You can detect HTTP `OPTIONS` requests with the Request object's `isOptions()` m
 
 You can detect HTTP `PATCH` requests with the Request object's `isPatch()` method.
 
-    <?php
     if ($request->isPatch()) {
         // Do something
     }
@@ -112,7 +106,7 @@ You may also include the `X-HTTP-Method-Override` header in the HTTP request. Yo
 
 In accordance with the PSR-7 standard, you can inspect the Request URI by fetching the Uri instance from the Request object.
 
-    $uri = $app->request->getUri();
+    $uri = $request->getUri();
 
 ### Scheme
 
@@ -191,7 +185,7 @@ You can fetch the HTTP request's cookie data as an associative array with the Re
 
 ## Request Body
 
-You can inspect the HTTP request's body by fetching the Body instance with the Request object's `getBody()` and `getParsedBody()` methods. 
+You can inspect the HTTP request's body with the Request object's `getBody()` and `getParsedBody()` methods.
 
 ### The getBody() method
 
@@ -207,7 +201,7 @@ You may also fetch a parsed representation of the HTTP request body using the Re
 
 ## Request Helpers
 
-The Request object provides additional methods to inspect the HTTP request metadata (e.g., content type, charset, length, IP, and referrer).
+The Request object provides additional methods to inspect the HTTP request metadata (e.g., content type, charset, length, and IP address).
 
 ### Detect AJAX / XHR requests
 
