@@ -294,38 +294,34 @@ X-HTTP-Method-Override: PUT
 </code></pre>
 <h2 id="request-url">Request URL</h2>
 <p>In accordance with the PSR-7 standard, you can inspect the Request URI by fetching the Uri instance from the Request object.</p>
-<pre><code>&lt;?php
-$uri = $app-&gt;request-&gt;getUri();
+<pre><code>$uri = $app-&gt;request-&gt;getUri();
 </code></pre>
 <h3 id="scheme">Scheme</h3>
 <p>You can fetch the HTTP request scheme (e.g., HTTP or HTTPS) with the Uri object's <code>getScheme()</code> method.</p>
-<pre><code>&lt;?php
-$scheme = $uri-&gt;getScheme();
+<pre><code>$scheme = $uri-&gt;getScheme();
 </code></pre>
 <h3 id="host">Host</h3>
 <p>You can fetch the HTTP request's host (e.g., example.com) with the Uri object's <code>getHost()</code> method.</p>
-<pre><code>&lt;?php
-$host = $uri-&gt;getHost();
+<pre><code>$host = $uri-&gt;getHost();
 </code></pre>
 <h3 id="port">Port</h3>
 <p>You can fetch the HTTP request's port number (e.g., 443) with the Uri object's <code>getPort()</code> method.</p>
-<pre><code>&lt;?php
-$port = $uri-&gt;getPort();
+<pre><code>$port = $uri-&gt;getPort();
 </code></pre>
 <h3 id="url-path">URL Path</h3>
 <p>You can fetch the HTTP request's path (relative to the physical directory in which your Slim application is installed) with the Uri object's <code>getPath()</code> method. This method returns a string that is matched against your Slim application routes.</p>
-<pre><code>&lt;?php
-$path = $uri-&gt;getPath();
+<pre><code>$path = $uri-&gt;getPath();
 </code></pre>
 <h3 id="url-base-path">URL Base Path</h3>
 <p>You can fetch the HTTP request's physical base path (relative to the document root) with the Uri object's <code>getBasePath()</code> method. This will be an empty string unless the Slim application is installed in a physical subdirectory beneath your document root.</p>
-<pre><code>&lt;?php
-$basePath = $uri-&gt;getBasePath();
+<pre><code>$basePath = $uri-&gt;getBasePath();
 </code></pre>
 <h3 id="query-string">Query String</h3>
 <p>You can fetch the HTTP request's raw query string (without the leading "?") with the Uri object's <code>getQuery()</code> method. This method returns an empty string if no query string is present in the current HTTP request.</p>
-<pre><code>&lt;?php
-$queryString = $uri-&gt;getQuery();
+<pre><code>$queryString = $uri-&gt;getQuery();
+</code></pre>
+<p>You may also fetch an associative array of query string parameters with the Request object's <code>getQueryParams()</code> method. This method returns an empty array if no query string is present.</p>
+<pre><code>$queryParams = $request-&gt;getQueryParams();
 </code></pre>
 <h2 id="request-headers">Request Headers</h2>
 <p>You can inspect the current HTTP request's headers with numerous methods on the Request object.</p>
@@ -366,49 +362,32 @@ foreach ($headers as $name =&gt; $values) {
 <p>The Request object provides additional methods to inspect the HTTP request metadata (e.g., content type, charset, length, IP, and referrer).</p>
 <h3 id="detect-ajax-xhr-requests">Detect AJAX / XHR requests</h3>
 <p>You can detect AJAX/XHR requests with the Request object's <code>isAjax()</code> and <code>isXhr()</code> methods. Both methods do the same thing, so choose only one. These methods detect the presence of the <code>X-Requested-With</code> HTTP request header and ensure its value is <code>XMLHttpRequest</code>. These methods also return <code>true</code> if the <code>isajax</code> parameter is provided in the HTTP request query string or body.</p>
-<pre><code>&lt;?php
-if ($app-&gt;request-&gt;isAjax() === true) {
+<pre><code>if ($request-&gt;isAjax()) {
     // Do something
 }
 </code></pre>
 <h3 id="content-type">Content Type</h3>
 <p>You can fetch the HTTP request content type with the Request object's <code>getContentType()</code> method. This returns the <code>Content-Type</code> header's full value as provided by the HTTP client.</p>
-<pre><code>&lt;?php
-$contentType = $app-&gt;request-&gt;getContentType();
+<pre><code>$contentType = $request-&gt;getContentType();
 </code></pre>
 <h3 id="media-type">Media Type</h3>
 <p>You may not want the complete <code>Content-Type</code> header. What if, instead, you only want the media type? You can fetch the HTTP request media type with the Request object's <code>getMediaType()</code> method.</p>
-<pre><code>&lt;?php
-$mediaType = $app-&gt;request-&gt;getMediaType();
+<pre><code>$mediaType = $request-&gt;getMediaType();
 </code></pre>
 <p>You can fetch the appended media type parameters as an associative array with the Request object's <code>getMediaTypeParams()</code> method.</p>
-<pre><code>&lt;?php
-$mediaParams = $app-&gt;request-&gt;getMediaTypeParams();
+<pre><code>$mediaParams = $request-&gt;getMediaTypeParams();
 </code></pre>
 <h3 id="character-set">Character Set</h3>
 <p>One of the most common media type parameters is the HTTP request character set. The Request object provides a dedicated method to retrieve this media type parameter.</p>
-<pre><code>&lt;?php
-$charset = $app-&gt;request-&gt;getContentCharset();
+<pre><code>$charset = $request-&gt;getContentCharset();
 </code></pre>
 <h3 id="content-length">Content Length</h3>
 <p>You can fetch the HTTP request content length with the Request object's <code>getContentLength()</code> method.</p>
-<pre><code>&lt;?php
-$length = $app-&gt;request-&gt;getContentLength();
+<pre><code>$length = $request-&gt;getContentLength();
 </code></pre>
 <h3 id="ip-address">IP Address</h3>
-<p>You can fetch the HTTP request's source IP address with the Request object's <code>getClientIp()</code> method. This method respects values provided by the <code>X-Forwarded-For</code> and <code>X-Client-IP</code> headers if present.</p>
-<pre><code>&lt;?php
-$ip = $app-&gt;request-&gt;getClientIp();
-</code></pre>
-<h3 id="referrer">Referrer</h3>
-<p>You can fetch the HTTP request referrer (if present) with the Request object's <code>getReferrer()</code> and <code>getReferer()</code> methods.</p>
-<pre><code>&lt;?php
-$ref = $app-&gt;request-&gt;getReferer();
-</code></pre>
-<h3 id="user-agent">User Agent</h3>
-<p>You can fetch the HTTP user agent string with the Request object's <code>getUserAgent()</code> method.</p>
-<pre><code>&lt;?php
-$agent = $app-&gt;request-&gt;getUserAgent();
+<p>You can fetch the HTTP request's source IP address with the Request object's <code>getIp()</code> method. This method respects the <code>X-Forwarded-For</code> header if present.</p>
+<pre><code>$ip = $request-&gt;getIp();
 </code></pre>
 
             </div>
