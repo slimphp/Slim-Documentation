@@ -231,43 +231,37 @@ $app-&gt;run();
 </code></pre>
 <h3 id="post-method">POST Method</h3>
 <p>You can detect HTTP <code>POST</code> requests with the Request object's <code>isPost()</code> method.</p>
-<pre><code>&lt;?php
-if ($request-&gt;isPost()) {
+<pre><code>if ($request-&gt;isPost()) {
     // Do something
 }
 </code></pre>
 <h3 id="put-method">PUT Method</h3>
 <p>You can detect HTTP <code>PUT</code> requests with the Request object's <code>isPut()</code> method.</p>
-<pre><code>&lt;?php
-if ($request-&gt;isPut()) {
+<pre><code>if ($request-&gt;isPut()) {
     // Do something
 }
 </code></pre>
 <h3 id="delete-method">DELETE Method</h3>
 <p>You can detect HTTP <code>DELETE</code> requests with the Request object's <code>isDelete()</code> method.</p>
-<pre><code>&lt;?php
-if ($request-&gt;isDelete()) {
+<pre><code>if ($request-&gt;isDelete()) {
     // Do something
 }
 </code></pre>
 <h3 id="head-method">HEAD Method</h3>
 <p>You can detect HTTP <code>HEAD</code> requests with the Request object's <code>isHead()</code> method.</p>
-<pre><code>&lt;?php
-if ($request-&gt;isHead()) {
+<pre><code>if ($request-&gt;isHead()) {
     // Do something
 }
 </code></pre>
 <h3 id="options-method">OPTIONS Method</h3>
 <p>You can detect HTTP <code>OPTIONS</code> requests with the Request object's <code>isOptions()</code> method.</p>
-<pre><code>&lt;?php
-if ($request-&gt;isOptions()) {
+<pre><code>if ($request-&gt;isOptions()) {
     // Do something
 }
 </code></pre>
 <h3 id="patch-method">PATCH Method</h3>
 <p>You can detect HTTP <code>PATCH</code> requests with the Request object's <code>isPatch()</code> method.</p>
-<pre><code>&lt;?php
-if ($request-&gt;isPatch()) {
+<pre><code>if ($request-&gt;isPatch()) {
     // Do something
 }
 </code></pre>
@@ -294,7 +288,7 @@ X-HTTP-Method-Override: PUT
 </code></pre>
 <h2 id="request-url">Request URL</h2>
 <p>In accordance with the PSR-7 standard, you can inspect the Request URI by fetching the Uri instance from the Request object.</p>
-<pre><code>$uri = $app-&gt;request-&gt;getUri();
+<pre><code>$uri = $request-&gt;getUri();
 </code></pre>
 <h3 id="scheme">Scheme</h3>
 <p>You can fetch the HTTP request scheme (e.g., HTTP or HTTPS) with the Uri object's <code>getScheme()</code> method.</p>
@@ -348,7 +342,7 @@ foreach ($headers as $name =&gt; $values) {
 <h2 id="request-cookies">Request Cookies</h2>
 <p>You can fetch the HTTP request's cookie data as an associative array with the Request object's <code>getCookieParams()</code> method. This is rudimentary, but it adheres to the PSR-7 interface. We are currently working on a better interface to inspect and manage HTTP cookies.</p>
 <h2 id="request-body">Request Body</h2>
-<p>You can inspect the HTTP request's body by fetching the Body instance with the Request object's <code>getBody()</code> and <code>getParsedBody()</code> methods. </p>
+<p>You can inspect the HTTP request's body with the Request object's <code>getBody()</code> and <code>getParsedBody()</code> methods.</p>
 <h3 id="the-getbody-method">The getBody() method</h3>
 <p>The Request object's <code>getBody()</code> method returns a <code>\Psr\Http\Message\StreamInterface</code> instance, and it provides methods to iterate and read the HTTP request body's underlying stream resource. Use this method if your inbound HTTP requests are very large or of unknown size to avoid potential PHP memory exhaustion errors.</p>
 <h3 id="the-getparsedbody-method">The getParsedBody() method</h3>
@@ -359,7 +353,7 @@ foreach ($headers as $name =&gt; $values) {
 <li>Form-encoded requests are converted into a PHP array with <code>parse_str($httpInput)</code>.</li>
 </ul>
 <h2 id="request-helpers">Request Helpers</h2>
-<p>The Request object provides additional methods to inspect the HTTP request metadata (e.g., content type, charset, length, IP, and referrer).</p>
+<p>The Request object provides additional methods to inspect the HTTP request metadata (e.g., content type, charset, length, and IP address).</p>
 <h3 id="detect-ajax-xhr-requests">Detect AJAX / XHR requests</h3>
 <p>You can detect AJAX/XHR requests with the Request object's <code>isAjax()</code> and <code>isXhr()</code> methods. Both methods do the same thing, so choose only one. These methods detect the presence of the <code>X-Requested-With</code> HTTP request header and ensure its value is <code>XMLHttpRequest</code>. These methods also return <code>true</code> if the <code>isajax</code> parameter is provided in the HTTP request query string or body.</p>
 <pre><code>if ($request-&gt;isAjax()) {
