@@ -229,7 +229,7 @@ RewriteRule ^ index.php [QSA,L]
 </code></pre>
 <p>This assumes that Slim's <code>index.php</code> is in the root folder of your project (www root).</p>
 <h1 id="hiphop-virtual-machine">HipHop Virtual Machine</h1>
-<p>Your HipHop Virtual Machine configuration file should contain this code (along with other settings you may need). Be sure you change the <code>ServerRoot</code> setting to point to your Slim app's document root directory.</p>
+<p>Your HipHop Virtual Machine configuration file should contain this code (along with other settings you may need). Be sure you change the <code>SourceRoot</code> setting to point to your Slim app's document root directory.</p>
 <pre><code>Server {
     SourceRoot = /path/to/public/directory
 }
