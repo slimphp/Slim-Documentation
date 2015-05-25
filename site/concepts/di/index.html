@@ -72,11 +72,10 @@
                         
                             <li class="toctree-l2"><a href="#container">Container</a></li>
                             
-                        
-                            <li class="toctree-l2"><a href="#services">Services</a></li>
+                                <li><a class="toctree-l3" href="#usage">Usage</a></li>
                             
                         
-                            <li class="toctree-l2"><a href="#service-providers">Service providers</a></li>
+                            <li class="toctree-l2"><a href="#required-services">Required services</a></li>
                             
                         
                         </ul>
@@ -207,23 +206,39 @@
           <div role="main">
             <div class="section">
               <h1 id="container">Container</h1>
-<p>Each Slim application has <em>dependencies</em>. Examples include the Environment, Request, Response, and Router objects described above.</p>
-<p>Out of the box, Slim provides a first-party implementation for each dependency. However, it's possible to provide custom implementations for each dependency because the Slim application is an instance of the <a href="http://pimple.sensiolabs.org/">Pimple</a> dependency injection container. Each application dependency is a Pimple service that lazily instantiates and returns an  appropriate object upon request.</p>
-<h1 id="services">Services</h1>
-<p>To override a Slim application dependency, inject your own Pimple service before you invoke the Slim application's <code>run()</code> method. You may override any of these default application services:</p>
+<p>Slim uses a dependency injection container to prepare, manage, and inject dependencies. Slim supports any container that implements the <a href="https://github.com/container-interop/container-interop">Container-Interop</a> interface. You may use Slim's built-in container (based on <a href="http://pimple.sensiolabs.org/">Pimple</a>), or you may use one of the many third-party Container-Interop containers like <a href="https://github.com/jeremeamia/acclimate-container">Acclimate</a> or <a href="http://php-di.org/">PHP-DI</a>.</p>
+<h2 id="usage">Usage</h2>
+<p>You must inject the container instance into the Slim application constructor.</p>
+<pre><code>$app = new \Slim\App(new \Slim\Container);
+</code></pre>
+<p>Afterwards, you can fetch objects from your container explicitly or implicitly.
+You can fetch an explicit reference to the container instance from within a Slim application route like this:</p>
+<pre><code>$app-&gt;get('/foo', function ($req, $res, $args) {
+    $container = $this-&gt;getContainer();
+    $foo = $container-&gt;get('foo');
+});
+</code></pre>
+<p>However, you can also implicitly fetch objects from the application container like this:</p>
+<pre><code>$app-&gt;get('/foo', function ($req, $res, $args) {
+    $foo = $this-&gt;foo;
+});
+</code></pre>
+<p>Slim uses magic <code>__get()</code> and <code>__isset()</code> methods that delegate to the application container for all properties that do not already exist on the application instance.</p>
+<h1 id="required-services">Required services</h1>
+<p>Your container MUST implement these required services. If you use Slim's built-in container, these are provided for you. If you choose a third-party container, you must define these required services on your own.</p>
 <dl>
 <dt>settings</dt>
-<dd>This service must return a new instance of <code>\Slim\Interfaces\ConfigurationInterface</code>.</dd>
+<dd>Associative array of application settings, including keys <code>cookieLifetime</code>, <code>cookiePath</code>, <code>cookieDomain</code>, <code>cookieSecure</code>, <code>cookieHttpOnly</code>, <code>httpVersion</code>, and <code>responseChunkSize</code>.</dd>
 <dt>environment</dt>
-<dd>This service must return a new instance of <code>\Slim\Interfaces\EnvironmentInterface</code>.</dd>
+<dd>Instance of <code>\Slim\Interfaces\Http\EnvironmentInterface</code>.</dd>
 <dt>request</dt>
-<dd>This service must return a new instance of <code>\Psr\Http\Message\RequestInterface</code>.</dd>
+<dd>Instance of <code>\Psr\Http\Message\RequestInterface</code>.</dd>
 <dt>response</dt>
-<dd>This service must return a new instance of <code>\Psr\Http\Message\ResponseInterface</code>.</dd>
+<dd>Instance of <code>\Psr\Http\Message\ResponseInterface</code>.</dd>
 <dt>router</dt>
-<dd>This service must return a <em>shared</em> instance of <code>\Slim\Interfaces\RouterInterface</code>.</dd>
+<dd>Instance of <code>\Slim\Interfaces\RouterInterface</code>.</dd>
 <dt>errorHandler</dt>
-<dd>This service must return a callable to be invoked if there is an application error. The callable <strong>MUST</strong> return an instance of <code>\Psr\Http\Message\ResponseInterface</code>. The callable <strong>SHOULD</strong> accept three arguments:</dd>
+<dd>Callable invoked if application error. The callable <strong>MUST</strong> return an instance of <code>\Psr\Http\Message\ResponseInterface</code> and accept three arguments:</dd>
 </dl>
 <ol>
 <li><code>\Psr\Http\Message\RequestInterface</code></li>
@@ -232,7 +247,7 @@
 </ol>
 <dl>
 <dt>notFoundHandler</dt>
-<dd>This service must return a callable to be invoked if the current HTTP request URI does not match an application route. The callable <strong>MUST</strong> return an instance of <code>\Psr\Http\Message\ResponseInterface</code>. The callable <strong>SHOULD</strong> accept two arguments:</dd>
+<dd>Callable invoked if the current HTTP request URI does not match an application route. The callable <strong>MUST</strong> return an instance of <code>\Psr\Http\Message\ResponseInterface</code> and accept two arguments:</dd>
 </dl>
 <ol>
 <li><code>\Psr\Http\Message\RequestInterface</code></li>
@@ -240,37 +255,13 @@
 </ol>
 <dl>
 <dt>notAllowedHandler</dt>
-<dd>This service must return a callable to be invoked if an application route matches the current HTTP request path but not its method. The callable <strong>MUST</strong> return an instance of <code>\Psr\Http\Message\ResponseInterface</code>. The callable <strong>SHOULD</strong> accept three arguments:</dd>
+<dd>Callable invoked if an application route matches the current HTTP request path but not its method. The callable <strong>MUST</strong> return an instance of <code>\Psr\Http\Message\ResponseInterface</code> and accept three arguments:</dd>
 </dl>
 <ol>
 <li><code>\Psr\Http\Message\RequestInterface</code></li>
 <li><code>\Psr\Http\Message\ResponseInterface</code></li>
 <li>Array of allowed HTTP methods</li>
 </ol>
-<p>You most likely <strong>do not</strong> need to replace these dependencies. However, you can if necessary. Slim's default service implementations live in the Slim application's <code>__construct()</code> function.</p>
-<h1 id="service-providers">Service providers</h1>
-<p>Each Slim application extends the <code>\Pimple\Container</code> class. This means each Slim application can accept and register <a href="http://pimple.sensiolabs.org/#extending-a-container">Pimple Service Providers</a>. You register Pimple Service Providers with the Slim application's <code>register()</code> method.</p>
-<p>A simple example is the <a href="../../features/templates/#the-slimtwig-view-component">slim/twig-view</a> component. After you install the <code>slim/twig-view</code> component with Composer, you can register the component with a Slim application like this:</p>
-<pre><code class="php">// Create Slim app
-$app = new \Slim\App();
-
-// Register Twig View service
-$app-&gt;register(new \Slim\Views\Twig('path/to/templates', [
-    'cache' =&gt; 'path/to/cache'
-]));
-
-// Use Twig View service in route
-$app-&gt;get('/hello/{name}', function ($request, $response, $args) {
-    $this['view']-&gt;render('profile.html', [
-        'name' =&gt; $args['name']
-    ]);
-})-&gt;setName('profile');
-
-// Run app
-$app-&gt;run();
-</code></pre>
-
-<p>The <code>slim/twig-view</code> service provider adds a new <code>view</code> service to the Slim application container that you can use to render Twig templates.</p>
 
             </div>
           </div>
