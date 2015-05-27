@@ -79,8 +79,11 @@ _before_ you invoke your application's `run()` method.
 // Create Slim app
 $app = new \Slim\App();
 
+// Get DI Container
+$container = $app->getContainer();
+
 // Register Twig View service
-$app->register(new \Slim\Views\Twig('path/to/templates', [
+$container->register(new \Slim\Views\Twig('path/to/templates', [
     'cache' => 'path/to/cache'
 ]));
 
@@ -105,6 +108,9 @@ service.
 ```php
 // Create Slim app
 $app = new \Slim\App();
+
+// Get DI Container
+$container = $app->getContainer();
 
 // Register Twig View helper
 $app->register(new \Slim\Views\Twig('path/to/templates', [
