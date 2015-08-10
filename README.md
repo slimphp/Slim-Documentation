@@ -1,4 +1,4 @@
-# Slim-Documentation
+# Old Slim 3 Documentation
 
 This documentation is the deprecated Slim 3 documentation. 
 
